@@ -29,10 +29,8 @@ namespace Justibot
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=justibot.db");
+            optionsBuilder.UseMySql(Services.Configuration.config.ConnectionString);
         }
-
-
     }
 
     public class ServerPerm

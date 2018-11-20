@@ -22,7 +22,7 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new ServerPerm { PServId = serverID, SPerm = permTC, PermActive = activ, PermArg = args, Pmode = mode }; 
                     db.ServerPerms.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
@@ -30,7 +30,7 @@ namespace Justibot
                     EPerm.PermActive = activ;
                     EPerm.PermArg = args;
                     EPerm.Pmode = mode;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -47,7 +47,7 @@ namespace Justibot
                 {
                     versionControl control = new versionControl{time = dater, version = version};
                     db.Add(control);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
                 else
                 {
@@ -55,7 +55,7 @@ namespace Justibot
                     usersxps.time = dater;
                     usersxps.version = version;
                     db.Update(usersxps);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;   
@@ -75,12 +75,12 @@ namespace Justibot
                 {
                     var permTS = new Giveaway { GservID = serverID, prize = prizes, GActive = activ, Gchannel = args,}; 
                     db.Givaways.Add(permTS);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
 
                     var giving = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
                     var giver = new Entry{ entrentID = user.Id, ishost = true, Giveaway = giving};
                     giving.Entries.Add(giver);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
@@ -88,12 +88,12 @@ namespace Justibot
                     EPerm.GActive = activ;
                     EPerm.Gchannel = args;
                     EPerm.prize = prizes;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     
                     var giving = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
                     Entry host = new Entry{ entrentID = user.Id, ishost = true, Giveaway = giving};
                     giving.Entries.Add(host);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     
                 }
             }
@@ -118,7 +118,7 @@ namespace Justibot
                     var giving = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
                     Entry host = new Entry{ entrentID = user.Id, ishost = false, Giveaway = giving};
                     giving.Entries.Add(host);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -144,7 +144,7 @@ namespace Justibot
                     if(EPerm.Entries.Count > 1)
                     {
                         db.RemoveRange(EPerm.Entries.Where(b => b.ishost == false));
-                        db.SaveChangesAsync();
+                        db.SaveChanges();
                     }
                 }
             }
@@ -164,14 +164,14 @@ namespace Justibot
                 {
                     globaluserxp server = new globaluserxp{User = user.Id, Xp = xp};
                     db.Add(server);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
                 else
                 {
                     var usersxps = giveaway.First();
                     usersxps.Xp = xp;
                     db.Update(usersxps);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;   
@@ -192,33 +192,33 @@ namespace Justibot
                 {
                     var permTS = new serverxp { xServId = serverID, Xp = sxp}; 
                     db.serversxp.Add(permTS);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
 
                     var giving = db.serversxp.Where(b => b.xServId == serverID).Include(x => x.usersXp).First();
                     var giver = new serveruserxp{ User = user.Id, Xp = uxp};
                     giving.usersXp.Add(giver);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.Xp = sxp;
                     db.Update(EPerm);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     
                     var giving2 = EPerm.usersXp.Where(x => x.User == user.Id).ToList();
                     if(giving2.Count == 0)
                     {
                         serveruserxp host = new serveruserxp{ User = user.Id, Xp = uxp};
                         EPerm.usersXp.Add(host);
-                        db.SaveChangesAsync();
+                        db.SaveChanges();
                     }
                     else
                     {
                         serveruserxp usersx = giving2.First();
                         usersx.Xp = uxp;
                         db.Update(usersx);
-                        db.SaveChangesAsync();
+                        db.SaveChanges();
                     }
                     
                 }
@@ -241,7 +241,7 @@ namespace Justibot
                     var servers = perms.First();
                     db.RemoveRange(servers.usersXp.ToList());
                     db.Remove(servers);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
                 else
                 {
@@ -265,7 +265,7 @@ namespace Justibot
                 {
                     var servers = perms.First();
                     db.RemoveRange(servers.usersXp.ToList());
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
                 else
                 {
@@ -285,7 +285,7 @@ namespace Justibot
                 if(perms.Count != 0)
                 {
                     db.RemoveRange(perms);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             using (var db = new DataContext())
@@ -296,7 +296,7 @@ namespace Justibot
                 if(perms.Count != 0)
                 {
                     db.RemoveRange(perms);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             using (var db = new DataContext())
@@ -307,7 +307,7 @@ namespace Justibot
                 if(perms.Count != 0)
                 {
                     db.RemoveRange(perms);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -327,13 +327,13 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new reward { rserver = serverID, rewardrole = role, rewardlvl = level }; 
                     db.rewards.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.rewardlvl = level;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -353,13 +353,13 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new blacklist { bserver = serverID}; 
                     db.blacklists.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.bserver = user.GuildId;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -381,7 +381,7 @@ namespace Justibot
                 {
                     var EPerm = perms.First();
                     db.Remove(EPerm);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
                 return;
             }
@@ -404,7 +404,7 @@ namespace Justibot
                 {
                     var EPerm = perms.First();
                     db.Remove(EPerm);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return(true);
                 }
             }
@@ -427,7 +427,7 @@ namespace Justibot
                 {
                     var EPerm = giveaway.First();
                     db.RemoveRange(EPerm.Entries);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;   
@@ -448,13 +448,13 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new staffRole { RServId = serverID, PermArg = args }; 
                     db.staffRoles.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.PermArg = args;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -477,7 +477,7 @@ namespace Justibot
                 {
                     var EPerm = perms.First();
                     db.Remove(EPerm);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return(true);
                 }
             }
@@ -497,7 +497,7 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new music { Tserver = serverID, Tname = track }; 
                     db.musics.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
             }
             return;
@@ -513,7 +513,7 @@ namespace Justibot
                     .First();
 
                 db.Remove(perms);
-                db.SaveChangesAsync();
+                db.SaveChanges();
             }
             return;
         }
@@ -527,7 +527,7 @@ namespace Justibot
                     .ToList();
 
                 db.Remove(perms);
-                db.SaveChangesAsync();
+                db.SaveChanges();
             }
             return;
         }
@@ -538,7 +538,7 @@ namespace Justibot
             {
                 var adminToAdd = new admin { staffMember = adminId };
                 db.admins.Add(adminToAdd);
-                db.SaveChangesAsync();
+                db.SaveChanges();
             }
         }
 
@@ -550,7 +550,7 @@ namespace Justibot
                     .Where(x => x.staffMember == adminId)
                     .First();
                 db.admins.Remove(adminToAdd);
-                db.SaveChangesAsync();
+                db.SaveChanges();
             }
         }
 
@@ -568,13 +568,13 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new ServPrefix { prefixGuild = serverID, prefix = prefix }; 
                     db.prefixes.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.prefix = prefix;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -594,13 +594,13 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new WelcomeMessage { welcomeGuild = serverID, message = prefix }; 
                     db.welcomeMessages.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.message = prefix;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -620,13 +620,13 @@ namespace Justibot
                     ulong serverID = user.GuildId;
                     var permTS = new LeavingMessage { leavingGuild = serverID, message = prefix }; 
                     db.leavingMessages.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
                     var EPerm = perms.First();
                     EPerm.message = prefix;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;
@@ -648,7 +648,7 @@ namespace Justibot
                 {
                     var noteTS = new Note{Name = name, Type = type, Content = content, User = user.Id, nServId = user.GuildId};
                     db.notes.Add(noteTS);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return("Saved");
                 }
                 
@@ -671,7 +671,7 @@ namespace Justibot
                 {
                     var noteTS = new Note{Name = name, Type = 3, Content = content, User = user.Id, nServId = user.GuildId};
                     db.notes.Add(noteTS);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return("Saved");
                 }
                 
@@ -694,7 +694,7 @@ namespace Justibot
                 {
                     var noteTS = new Note{Name = name, Type = 4, Content = content, User = user.Id, nServId = user.GuildId};
                     db.notes.Add(noteTS);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return("Saved");
                 }
                 
@@ -717,7 +717,7 @@ namespace Justibot
                 else
                 {
                     db.notes.RemoveRange(notes);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return("Saved");
                 }
                 
@@ -740,7 +740,7 @@ namespace Justibot
                 else
                 {
                     db.notes.RemoveRange(notes);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     return("Saved");
                 }
                 
@@ -762,7 +762,7 @@ namespace Justibot
                 {
                     var permTS = new Tournament { TservID = serverID, Title = prizes, Tactive = activ, Tchannel = args, joinable = join, Thost= user.Id }; 
                     db.Tournaments.Add(permTS);
-                    db.SaveChangesAsync();                    
+                    db.SaveChanges();                    
                 }
                 else
                 {
@@ -772,7 +772,7 @@ namespace Justibot
                     EPerm.Title = prizes;
                     EPerm.Thost = user.Id;
                     EPerm.joinable = join;
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                     
                 }
             }
@@ -809,7 +809,7 @@ namespace Justibot
                     }
                     TPlayer host = new TPlayer{ playerID = user.Id, state = 2, Tournament = giving, lost = false, teamNo = team, isLeader = true };
                     giving.players.Add(host);
-                    db.SaveChangesAsync();
+                    db.SaveChanges();
                 }
             }
             return;

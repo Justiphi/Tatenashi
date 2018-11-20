@@ -24,6 +24,11 @@ namespace Justibot.Services
             }
 
             config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(file));
+
+            using(var db = new DataContext())
+            {
+                db.Database.EnsureCreated();
+            }
         }
     }
 }

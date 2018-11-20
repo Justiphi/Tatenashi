@@ -10,12 +10,11 @@ using System.Linq;
 
 namespace Justibot.Modules.OwnerModule
 {
+    //sets owner module prefix
     [Group("o")]
     public class OwnerModule : ModuleBase
     {
-        //PREFIX
-
-
+        //creates invite link to server with specified server id
         [Command("invite")]
         public async Task CreateInvite(ulong id)
         {
@@ -23,13 +22,21 @@ namespace Justibot.Modules.OwnerModule
             if ((Justibot.Loader.checkAdmin(Context.User.Id)) || (Context.User.Id == application.Owner.Id))
             {
                 var RequestedGuild = await Context.Client.GetGuildAsync(id);
-                IInviteMetadata GuildDefault =
-                    await (await RequestedGuild.GetChannelAsync(RequestedGuild.DefaultChannelId) as IGuildChannel)
-                        .CreateInviteAsync();
-                await Context.Channel.SendMessageAsync("Invite link: " + GuildDefault.Url);
+                if (RequestedGuild != null)
+                {
+                    IInviteMetadata GuildDefault =
+                        await (await RequestedGuild.GetChannelAsync(RequestedGuild.DefaultChannelId) as IGuildChannel)
+                            .CreateInviteAsync();
+                    await Context.Channel.SendMessageAsync("Invite link: " + GuildDefault.Url);
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync("Server not found");
+                }
             }
         }
 
+        //displays information about a server based on server id
         [Command("serverinfo")]
         [Summary("displays info about the server")]
         public async Task ServerInfo(ulong id)
@@ -102,6 +109,7 @@ namespace Justibot.Modules.OwnerModule
             }
         }
 
+        //forces bot to leave a server based on server id
         [Command("leaveGuild")]
         [RequireOwner]
         public async Task LeaveGuild(ulong id)
