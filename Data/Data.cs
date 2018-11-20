@@ -4,6 +4,8 @@ namespace Justibot
 {
     public class Data
     {
+        //Lists of static data to get information from for memory optimization
+
         public static Random rand = new Random();
 
         public static string[] lemurList =

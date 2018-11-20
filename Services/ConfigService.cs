@@ -11,6 +11,7 @@ namespace Justibot.Services
     }
     public class Configuration
     {
+        //configuration class to get configuration information from
         public static ConfigModel config;
         public static void configure()
         {
@@ -18,11 +19,13 @@ namespace Justibot.Services
             
             file = Path.Combine(AppContext.BaseDirectory, "_config.json");
 
+            //ensures _config.json exists
             if (!File.Exists(file))
             {
                 throw new ApplicationException("Unable to locate the _config.json file.");
             }
 
+            //loads configuration from _config.json file into memory
             config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(file));
 
             using(var db = new DataContext())
