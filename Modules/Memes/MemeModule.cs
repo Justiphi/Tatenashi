@@ -15,6 +15,7 @@ namespace Justibot.Modules.Meme
             await ReplyAsync($"Pong! `Latency: {(Context.Client as DiscordSocketClient).Latency}ms`");
         }
 
+        //Command to start playing youtube video for rickrolling
         [Command("roll")]
         [Summary("Rolls meme! Requested by iMiNvoke")]
         public async Task roll()
@@ -22,10 +23,11 @@ namespace Justibot.Modules.Meme
             await ReplyAsync("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
         }
 
+        //Command to initate the coin toss command
         [Command("coin")]
         [Summary("Coin toss")]
         public async Task coin()
-        {
+        {   //generate a random number between 0 and 1 and assigns heads and tails to each
             int rolledNumber = Data.rand.Next(2);
             if (rolledNumber == 0)
             {
@@ -42,6 +44,7 @@ namespace Justibot.Modules.Meme
             }
         }
 
+        //Command to initate the dice roll command
         [Command("dice")]
         [Summary("rolls a 6 sided die")]
         public async Task dice(int sides = 6)
@@ -57,6 +60,7 @@ namespace Justibot.Modules.Meme
             }
         }
 
+        //displays the shifty eye meme image
         [Command("shifty")]
         [Summary("Shifty Eyes XD")]
         public async Task shifty()
@@ -64,6 +68,7 @@ namespace Justibot.Modules.Meme
             await Context.Channel.SendFileAsync("Resources/Images/shifty.gif");
         }
 
+        //plays youTube video with one random video from the Rave videos from Data\Data.cs@Raves
         [Command("Rave")]
         [Summary("Rave party, suggested by shley92822212")]
         public async Task Rave()
@@ -73,6 +78,7 @@ namespace Justibot.Modules.Meme
             await ReplyAsync(ravetune);
         }
 
+        //redirects to leekspin
         [Command("Leeks")]
         [Summary("leek time, suggested by shley92822212")]
         public async Task Leeks()
