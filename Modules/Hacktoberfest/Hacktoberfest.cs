@@ -1,8 +1,9 @@
-using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Justibot.Services;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace Justibot.Modules.Help
 {
@@ -20,6 +21,15 @@ namespace Justibot.Modules.Help
 
         //     await ReplyAsync(response);
         // }
-        
+
+        [Command("urban")]
+        [Summary("Look up a word on urbandictionary.com")]
+        public async Task Urban(string keyword)
+        {
+            var url = "https://www.urbandictionary.com/define.php?term="+HttpUtility.UrlEncode(keyword);
+ 
+            await ReplyAsync(url);
+        }
+
     }
 }
