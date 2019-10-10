@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -10,16 +11,18 @@ namespace Justibot.Modules.Help
     public class HacktoberModule : ModuleBase
     {
 
-        // [Command("CommandName")] //single word
-        // [Summary("Description of command")] //can be multiple words
-        // public async Task MethodName() //method name should be related to command name
-        // {
-        //     string response;
+        [Command("RollSixDice")] //single word
+        [Summary("Roll a six dice")] //can be multiple words
+        public async Task RollSixDice() //method name should be related to command name
+        {
+            string response;
 
-        //     //code to create response
+            //code to create response
+            Random random = new Random();
+            response = $"The result was {random.Next(1, 7).ToString()}";
 
-        //     await ReplyAsync(response);
-        // }
-        
+            await ReplyAsync(response);
+        }
+
     }
 }
