@@ -13,6 +13,16 @@ namespace Justibot.Modules.Help
     [Group("Hackfest")]
     public class HacktoberModule : ModuleBase
     {
+    
+        // COMMAND TEMPLATE
+        // [Command("CommandName")] //single word
+        // [Summary("Description of command")] //can be multiple words
+        // public async Task MethodName() //method name should be related to command name
+        // {
+        //     string response;
+        //     await ReplyAsync(response);
+        // }
+    
         // Displays the number of days in a month for the current year
         [Command("MonthLength")]
         [Summary("Command to display how many days a month has this year. Pass the month number (e.g. 1 for January, 2 for February and so on) as an argument.")]
@@ -42,6 +52,18 @@ namespace Justibot.Modules.Help
 
 
             string response = months[month-1].Item1 + " has " + months[month-1].Item2 + " days.";
+            
+            await ReplyAsync(response);
+        }
+
+        [Command("RollSixDice")] //single word
+        [Summary("Roll a six dice")] //can be multiple words
+        public async Task RollSixDice() //method name should be related to command name
+        {
+            string response;
+            //code to create response
+            Random random = new Random();
+            response = $"The result was {random.Next(1, 7).ToString()}";
 
             await ReplyAsync(response);
         }
@@ -66,16 +88,6 @@ namespace Justibot.Modules.Help
 
             await ReplyAsync(returnURL);
         }
-        // [Command("CommandName")] //single word
-        // [Summary("Description of command")] //can be multiple words
-        // public async Task MethodName() //method name should be related to command name
-        // {
-        //     string response;
-
-        //     //code to create response
-
-        //     await ReplyAsync(response);
-        // }
 
         [Command("urban")]
         [Summary("Look up a word on urbandictionary.com")]
