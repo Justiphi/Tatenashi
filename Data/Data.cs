@@ -29,7 +29,7 @@ namespace Justibot
             "Resources/Images/dogs/dog9.jpg"
         };
 
-        public static string version = "V7.0.0 Ignition";
+        public static string version = "V8.1.0 Hacktoberfest";
 
         public static string[] saveList =
         {
