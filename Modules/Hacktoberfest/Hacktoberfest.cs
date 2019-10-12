@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using Justibot.Services;
 using System.Threading.Tasks;
 using System.Web;
+using System.Globalization;
 
 namespace Justibot.Modules.Help
 {
@@ -96,6 +97,27 @@ namespace Justibot.Modules.Help
             var url = "https://www.urbandictionary.com/define.php?term="+HttpUtility.UrlEncode(keyword);
  
             await ReplyAsync(url);
+        }
+
+        [Command("FantasyName")]
+        [Summary("Generates a simple fantasy name.")]
+        public async Task FantasyName()
+        {
+            var random = new Random();
+            var nameSegments = new string[] { "mon", "fay", "shi", "zag", "blag", "rash", "izen", "fan", "sha", "bol", "bly", "kle", "try" };
+            var randomCount = random.Next(4, 6);
+            var finalName = "";
+
+            for (var i = 0; i < randomCount; i++)
+            {
+                finalName += nameSegments[random.Next(nameSegments.Length - 1)];
+                if (i == 1)
+                    finalName += " ";
+            }
+
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            await ReplyAsync(textInfo.ToTitleCase(finalName));
         }
     }
 }
