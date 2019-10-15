@@ -14,9 +14,7 @@ namespace justibot_server.Modules.OpenWeather
         public OpenWeatherAPI(string apiKey)
         {
             openWeatherAPIKey = apiKey;
-        }
-
-        //Returns null if invalid request
+        }       
         public async Task<double> QueryAsync(string queryStr)
         {
             Uri uri = new Uri(string.Format("http://api.openweathermap.org/data/2.5/weather?appid={0}&q={1}", openWeatherAPIKey, queryStr).ToString());
