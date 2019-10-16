@@ -121,6 +121,7 @@ namespace Justibot.Modules.Help
             await ReplyAsync(textInfo.ToTitleCase(finalName));
         }
 
+
         [Command("DNDWeapon")]
         [Summary("Generates a random DNDWeapon")]
         public async Task DNDWeapon()
@@ -134,6 +135,15 @@ namespace Justibot.Modules.Help
             var Weapon = $"{WeaponName} {DmgNum}d{DmgSize}";
 
             await ReplyAsync(Weapon);
+
+        [Command("LMGTFY")]
+        [Summary("Sarcastic/funny way to search google for a question someone might ask.")]
+        public async Task LetMeGoogleThatForYou(string searchTerm)
+        {
+            var url = "https://lmgtfy.com/?q=" + HttpUtility.UrlEncode(searchTerm);
+
+            await ReplyAsync(url);
+
         }
     }
 }
