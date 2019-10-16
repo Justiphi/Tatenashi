@@ -119,5 +119,14 @@ namespace Justibot.Modules.Help
 
             await ReplyAsync(textInfo.ToTitleCase(finalName));
         }
+
+        [Command("LMGTFY")]
+        [Summary("Sarcastic/funny way to search google for a question someone might ask.")]
+        public async Task LetMeGoogleThatForYou(string searchTerm)
+        {
+            var url = "https://lmgtfy.com/?q=" + HttpUtility.UrlEncode(searchTerm);
+
+            await ReplyAsync(url);
+        }
     }
 }
