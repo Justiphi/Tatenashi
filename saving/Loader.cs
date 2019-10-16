@@ -19,6 +19,7 @@ namespace Justibot
 
             using (var context = new DataContext())
             {
+                //Capture perms for current context
                 var perms = context.ServerPerms
                 .Where(b => b.PServId.Equals(user.GuildId) && b.SPerm.Equals(permTL))
                 .ToList();
