@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -120,6 +121,21 @@ namespace Justibot.Modules.Help
             await ReplyAsync(textInfo.ToTitleCase(finalName));
         }
 
+
+        [Command("DNDWeapon")]
+        [Summary("Generates a random DNDWeapon")]
+        public async Task DNDWeapon()
+        { 
+            var rn = new Random();
+            var DmgNum = rn.Next(1, 3);
+            var DmgSize = rn.Next(1, 6);
+
+            var WeaponList = new List<string>{"Sword", "Bow", "Axe", "Pike", "Hammer", "Staff"};
+            var WeaponName = WeaponList[rn.Next(0, 5)].ToString();
+            var Weapon = $"{WeaponName} {DmgNum}d{DmgSize}";
+
+            await ReplyAsync(Weapon);
+
         [Command("LMGTFY")]
         [Summary("Sarcastic/funny way to search google for a question someone might ask.")]
         public async Task LetMeGoogleThatForYou(string searchTerm)
@@ -127,6 +143,7 @@ namespace Justibot.Modules.Help
             var url = "https://lmgtfy.com/?q=" + HttpUtility.UrlEncode(searchTerm);
 
             await ReplyAsync(url);
+
         }
     }
 }
