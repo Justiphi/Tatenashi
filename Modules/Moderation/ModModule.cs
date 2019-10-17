@@ -98,16 +98,22 @@ namespace Justibot.Modules.Moderation
                     else
                     {
                         await ReplyAsync("invalid value please make sure value is a number");
+                        return;
                     }
+                }
+                if (!(Context.Channel is ITextChannel channel))
+                {
+                    await ReplyAsync("This command must be used from a guild text channel.");
+                    return;
                 }
                 if (xmd <= 100 && xmd >= 0)
                 {
                     if (xmd == 100)
                     {
-                        var messagesToDelete = await Context.Channel.GetMessagesAsync(xmd, CacheMode.AllowDownload).Flatten();
+                        var messagesToDelete = await Context.Channel.GetMessagesAsync(xmd, CacheMode.AllowDownload).FlattenAsync();
                         try
                         {
-                            await Context.Channel.DeleteMessagesAsync(messagesToDelete);
+                            await channel.DeleteMessagesAsync(messagesToDelete);
                         }
                         catch
                         {
@@ -116,10 +122,10 @@ namespace Justibot.Modules.Moderation
                     }
                     else
                     {
-                        var messagesToDelete = await Context.Channel.GetMessagesAsync(xmd + 1, CacheMode.AllowDownload).Flatten();
+                        var messagesToDelete = await Context.Channel.GetMessagesAsync(xmd + 1, CacheMode.AllowDownload).FlattenAsync();
                         try
                         {
-                            await Context.Channel.DeleteMessagesAsync(messagesToDelete);
+                            await channel.DeleteMessagesAsync(messagesToDelete);
                         }
                         catch
                         {
@@ -135,10 +141,10 @@ namespace Justibot.Modules.Moderation
                     {
                         await Context.Channel.SendMessageAsync("number greater than 100 (unsupported) deleting 100 messages instead");
                         await Task.Delay(3000);
-                        var messagesToDelete = await Context.Channel.GetMessagesAsync(100).Flatten();
+                        var messagesToDelete = await Context.Channel.GetMessagesAsync(100).FlattenAsync();
                         try
                         {
-                            await Context.Channel.DeleteMessagesAsync(messagesToDelete);
+                            await channel.DeleteMessagesAsync(messagesToDelete);
                         }
                         catch
                         {
