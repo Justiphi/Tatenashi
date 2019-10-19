@@ -6,7 +6,6 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Justibot.Services;
-using System.Threading.Tasks;
 using System.Web;
 using System.Globalization;
 
@@ -125,16 +124,17 @@ namespace Justibot.Modules.Help
         [Command("DNDWeapon")]
         [Summary("Generates a random DNDWeapon")]
         public async Task DNDWeapon()
-        { 
+        {
             var rn = new Random();
             var DmgNum = rn.Next(1, 3);
             var DmgSize = rn.Next(1, 6);
 
-            var WeaponList = new List<string>{"Sword", "Bow", "Axe", "Pike", "Hammer", "Staff"};
+            var WeaponList = new List<string> { "Sword", "Bow", "Axe", "Pike", "Hammer", "Staff" };
             var WeaponName = WeaponList[rn.Next(0, 5)].ToString();
             var Weapon = $"{WeaponName} {DmgNum}d{DmgSize}";
 
             await ReplyAsync(Weapon);
+        }
 
         [Command("LMGTFY")]
         [Summary("Sarcastic/funny way to search google for a question someone might ask.")]
