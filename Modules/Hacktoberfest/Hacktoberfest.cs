@@ -23,6 +23,56 @@ namespace Justibot.Modules.Help
         //     string response;
         //     await ReplyAsync(response);
         // }
+
+        // Allows for rolling multiple dice of a single type at once.
+        [Command("RollDice")]
+        [Summary("Roll a number of the same type of die and return the sum in the form ##d## (e.g., 3d8 will return 3-24)")]
+        public async Task RollDice(string diceString)
+        {
+            //  At maximum, this will allow for rolling up to 1000d1000, and will cap either value
+            //  to the maximum specified below.
+            const uint maxCount = 1000;
+            const uint maxSides = 1000;
+            
+            //  Our general error message
+            const string baseError = "Unable to parse '{0}'.  You can try something like '3d8' (positive numbers on each side) to get a value of 3 to 24.";
+
+            //  Forcing to lower case 'd' and removing whitespace.
+            var newDice = diceString.ToLower().Trim();
+            var rollPartitions = newDice.Split('d', StringSplitOptions.RemoveEmptyEntries);
+
+            //  parse to make sure there's only 2 elements separated by 'd'.
+            if(rollPartitions.Length != 2)
+            {
+                string error = string.Format(baseError, diceString);
+                await ReplyAsync(error);
+                return;
+            }
+
+            //  parse out the numbers, if possible.
+            uint count, sides;
+            if(!uint.TryParse(rollPartitions[0], out count) || !uint.TryParse(rollPartitions[1], out sides))
+            {
+                string error = string.Format(baseError, diceString);
+                await ReplyAsync(error);
+                return;
+            }
+
+            //  clamp the numbers down to maximum values.
+            count = (count > maxCount) ? maxCount : count;
+            sides = (sides > maxSides) ? maxSides : sides;
+
+            //  roll the dice and sum them.
+            var rng = new Random();
+            int total = 0;
+            for(int i = 0; i < count; i++)
+            {
+                total += (rng.Next((int)sides))+1;
+            }
+
+            //  provide the results.
+            await ReplyAsync($"{newDice} => {total}");
+        }
     
         // Displays the number of days in a month for the current year
         [Command("MonthLength")]
