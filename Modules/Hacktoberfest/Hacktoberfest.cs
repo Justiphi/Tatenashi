@@ -145,5 +145,34 @@ namespace Justibot.Modules.Help
             await ReplyAsync(url);
 
         }
+
+        [Command("PrimeCheck")]
+        [Summary("Check if number is Prime")]
+        public async Task PrimeNumberCheck(string number)
+        {
+            var isNumber = Int64.TryParse(number, out long num);
+            string result = string.Empty;
+            bool isPrime = true;
+            if (!isNumber)
+            {
+                result = $"{number} is not a valid integer number.";
+
+            }
+            else
+            {
+                for (int i = 2; i <= Math.Sqrt(num) + 1; i++)
+                {
+                    if (num % i == 0)
+                    {
+                        isPrime = false;
+                        break;
+                    }
+                }
+            }
+
+            result = $"{number} is{(!isPrime ? " not ":string.Empty)}a prime number";
+            await ReplyAsync(result);
+
+        }
     }
 }
