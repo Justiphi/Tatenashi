@@ -1,27 +1,45 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Justibot.Services;
+using justibot_server.Services;
 
 namespace Justibot.Modules.AudioModule
 {
     public class AudioModule : ModuleBase
     {
-        [Command("Music")]
-        public async Task JoinChannel([RemainderAttribute]string ignore)
+        private static readonly string[] YoutubeHosts = new[] { "youtu.be", "youtube.com", "www.youtube.com" };
+        private readonly AudioService _service;
+
+        public AudioModule(AudioService service)
         {
-            IGuildUser activeuser = Context.User as IGuildUser;
-            var gives = Justibot.Loader.LoadPerm(activeuser, "MUSIC");
-            ITextChannel channel2 = await Context.Guild.GetTextChannelAsync(gives.Item2) as ITextChannel;
-            if (Context.Channel == channel2)
+            _service = service;
+        }
+
+        [Command("StartMusic", RunMode = RunMode.Async)]
+        public async Task JoinVoiceChannel()
+        {
+            await _service.JoinAudioAsync((Context.User as IVoiceState).VoiceChannel);
+        }
+
+        [Command("Play", RunMode = RunMode.Async)]
+        public async Task Play([Remainder] string song)
+        {
+            if (!Uri.TryCreate(song, UriKind.Absolute, out var uri))
             {
-                if (gives.Item1 == true)
-                {
-                    await ReplyAsync("Music has been admin disabled due to bugs");
-                }
+                return;
+            }
+            if (YoutubeHosts.Contains(uri.Host))
+            {
+                await _service.SendAudioFromYoutubeLinkAsync(Context.Guild, song);
             }
         }
 
+        [Command("StopMusic", RunMode = RunMode.Async)]
+        public async Task LeaveVoiceChannel()
+        {
+            await _service.LeaveAudio(Context.Guild);
+        }
     }
 }
