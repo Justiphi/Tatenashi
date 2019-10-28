@@ -8,6 +8,7 @@ using Discord.WebSocket;
 using Justibot.Services;
 using System.Web;
 using System.Globalization;
+using justibot_server.Modules.OpenWeather;
 using RestSharp;
 using justibot_server.Modules.Hacktoberfest.Model;
 
@@ -77,6 +78,18 @@ namespace Justibot.Modules.Help
             await ReplyAsync($"{newDice} => {total}");
         }
     
+
+        [Command("CurrentWeather")]
+        [Summary("Gets current weather details (temperature in celcius) for the city")]
+        public async Task GetCurrentWeather(string city)
+        {
+            var openWeatherAPIClient = new OpenWeatherAPI("12fae21bf2ea5ab693761bdd1052bfb0");
+            var result = await openWeatherAPIClient.QueryAsync(city);
+            string response = $"The temperature in {city} is {result}C";
+            await ReplyAsync(response);
+        }
+
+
         // Displays the number of days in a month for the current year
         [Command("MonthLength")]
         [Summary("Command to display how many days a month has this year. Pass the month number (e.g. 1 for January, 2 for February and so on) as an argument.")]
