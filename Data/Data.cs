@@ -58,6 +58,16 @@ namespace Justibot
             "Daily Quote of Wisdom: In are code that us bros must follow it is stated that a mother of said bros is off limits to all bros. If This law be broken Bros may retaliate by revenge banging the culprits mother or sister. In the name of the Lez, The Nolan and the Holy Sass.... Amen :pray:"
         };
 
+        public static string[] CatFacts =
+        {
+            "Every year, nearly four million cats are eaten in Asia.",
+            "In just 7 years, one un-spayed female cat and one un-neutered male cat and their offspring can result in 420,000 kittens.",
+            "When a cat chases its prey, it keeps its head level. Dogs and humans bob their heads up and down.",
+            "Cats should not be fed tuna exclusively, as it lacks taurine, an essential nutrient required for good feline health.",
+            "An adult lion's roar can be heard up to five miles (eight kilometers) away.",
+            "Cats have supersonic hearing."
+        };
+
         public static string[] treeList =
         {
             "Resources/Images/Trees/tree.jpg",

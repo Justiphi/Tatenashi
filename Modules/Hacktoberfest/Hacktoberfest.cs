@@ -199,6 +199,16 @@ namespace Justibot.Modules.Help
 
         }
 
+        [Command("catfact")]
+        [Summary("Returns a random fact about cats.")]
+        public async Task CatFact()
+        {
+            int factN = Data.rand.Next(Data.CatFacts.Length);
+            string postedFact = Data.CatFacts[factN];
+            await ReplyAsync(postedFact);
+        }
+
+
         // Lighthearted insults towards a user
         [Command("Insult")]
         [Summary("Send an insult to someone, just type 'Insult <name>")]
