@@ -28,13 +28,14 @@ namespace Justibot
             //create client and add what serverity of information to log
             client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                LogLevel = LogSeverity.Info
+                LogLevel = LogSeverity.Info,
+                ExclusiveBulkDelete = false,
             });
 
             //create template for logged messages
             client.Log += (message) =>
             {
-                Console.WriteLine($"{System.DateTime.Now.ToString()} {message}");
+                Console.WriteLine(message.ToString());
                 return Task.CompletedTask;
             };
 
