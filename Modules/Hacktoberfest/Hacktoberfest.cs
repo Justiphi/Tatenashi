@@ -8,13 +8,16 @@ using Discord.WebSocket;
 using Justibot.Services;
 using System.Web;
 using System.Globalization;
+using RestSharp;
+using justibot_server.Modules.Hacktoberfest.Model;
 
 namespace Justibot.Modules.Help
 {
     [Group("Hackfest")]
     public class HacktoberModule : ModuleBase
     {
-    
+        private static readonly RestClient client = new RestClient();
+
         // COMMAND TEMPLATE
         // [Command("CommandName")] //single word
         // [Summary("Description of command")] //can be multiple words
@@ -194,6 +197,19 @@ namespace Justibot.Modules.Help
 
             await ReplyAsync(url);
 
+        }
+
+        [Command("Joke")]
+        [Summary("Tells you a random joke")]
+        public async Task TellAJoke()
+        {           
+            RestRequest request = new RestRequest(Method.GET);
+
+            client.BaseUrl = new Uri("https://official-joke-api.appspot.com/jokes/random");
+            var response = await client.GetAsync<Joke>(request).ConfigureAwait(false);
+
+            await ReplyAsync(response.setup);
+            await ReplyAsync(response.punchline);
         }
     }
 }
