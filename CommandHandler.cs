@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using justibot_server.Services;
 
 namespace Justibot
 {
@@ -29,6 +30,7 @@ namespace Justibot
             _map.AddSingleton(new WelcomeService());
             _map.AddSingleton(new LeavingService());
             _map.AddSingleton(new XpService());
+            _map.AddSingleton(new AudioService());
             _services = _map.BuildServiceProvider();
 
             // Either search the program and add all Module classes that can be found:
