@@ -199,6 +199,27 @@ namespace Justibot.Modules.Help
 
         }
 
+        // Lighthearted insults towards a user
+        [Command("Insult")]
+        [Summary("Send an insult to someone, just type 'Insult <name>")]
+        public async Task Insult(string Name)
+        {
+            var insults = new List<string> {
+            $"{Name} smells of cheese",
+            $"{Name} smells of poop",
+            $"{Name} has a stupid face",
+            $"{Name} has a dumb face",
+            $"{Name} sucks",
+            $"{Name} needs to get a life"
+            };  //Other insults can be appended to this list
+
+            var random = new Random();
+            int selection = random.Next(0, insults.Count);
+
+            string response = insults[selection];
+            await ReplyAsync(response);
+        }
+        
         [Command("Joke")]
         [Summary("Tells you a random joke")]
         public async Task TellAJoke()
