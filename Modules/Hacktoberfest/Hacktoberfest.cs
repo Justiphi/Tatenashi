@@ -145,5 +145,14 @@ namespace Justibot.Modules.Help
             await ReplyAsync(url);
 
         }
+
+        [Command("catfact")]
+        [Summary("Returns a random fact about cats.")]
+        public async Task CatFact()
+        {
+            int factN = Data.rand.Next(Data.CatFacts.Length);
+            string postedFact = Data.CatFacts[factN];
+            await ReplyAsync(postedFact);
+        }
     }
 }
