@@ -237,7 +237,7 @@ namespace Justibot.Modules.Help
                 }
             }
 
-            result = $"{number} is{(!isPrime ? " not ":string.Empty)}a prime number";
+            result = $"{number} is{(!isPrime ? " not":string.Empty)} a prime number";
             await ReplyAsync(result);
         }
 
