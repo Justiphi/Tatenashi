@@ -8,6 +8,7 @@ namespace Justibot.Services
     {
         public string Token { get; set; }
         public string ConnectionString { get; set; } //connection string for future database plans
+        public string OpenWeatherAPIKey { get; set; }
     }
     public class Configuration
     {

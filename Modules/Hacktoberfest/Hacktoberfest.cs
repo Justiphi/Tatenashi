@@ -83,7 +83,7 @@ namespace Justibot.Modules.Help
         [Summary("Gets current weather details (temperature in celcius) for the city")]
         public async Task GetCurrentWeather(string city)
         {
-            var openWeatherAPIClient = new OpenWeatherAPI("12fae21bf2ea5ab693761bdd1052bfb0");
+            var openWeatherAPIClient = new OpenWeatherAPI(Configuration.config.OpenWeatherAPIKey);
             var result = await openWeatherAPIClient.QueryAsync(city);
             string response = $"The temperature in {city} is {result}C";
             await ReplyAsync(response);
