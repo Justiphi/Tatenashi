@@ -11,7 +11,7 @@ namespace Justibot.Modules.Moderation
 {
     public class ModModule : ModuleBase
     {
-
+        //initiates kicking of a user 
         [Command("kick")]
         [RequireBotPermissionAttribute(GuildPermission.KickMembers)]
         [Summary("Kicks a user from the server")]
@@ -19,6 +19,7 @@ namespace Justibot.Modules.Moderation
         {
             var application = await Context.Client.GetApplicationInfoAsync();
             var activeuser = Context.User as IGuildUser;
+            //checks if initiating user has right to kick member or is the application owner
             if (activeuser.GuildPermissions.Has(GuildPermission.KickMembers) || activeuser.Id == application.Owner.Id)
             {
                 if (Context.Message.MentionedUserIds.Count() < 1)
@@ -44,6 +45,7 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates banning a user from the server
         [Command("ban")]
         [RequireBotPermissionAttribute(GuildPermission.BanMembers)]
         [Summary("Bans a user from the server")]
@@ -51,6 +53,7 @@ namespace Justibot.Modules.Moderation
         {
             var application = await Context.Client.GetApplicationInfoAsync();
             var activeuser = Context.User as IGuildUser;
+            //checks if initiating user has right to ban or is the application owner
             if (activeuser.GuildPermissions.Has(GuildPermission.BanMembers) || activeuser.Id == application.Owner.Id)
             {
                 if (Context.Message.MentionedUserIds.Count() < 1)
@@ -76,7 +79,7 @@ namespace Justibot.Modules.Moderation
             }
         }
 
-
+        //initiates purging messages from the channel
         [Command("purge")]
         [Alias("prune", "clear", "cleanup")]
         [Summary("Deletes x amount of messages from a channel (25 by default, will not delete more than 100 at a time)")]
@@ -179,7 +182,7 @@ namespace Justibot.Modules.Moderation
                 {}
             }
         }
-
+        //initiates muting a user
         [Command("Mute")]
         [Alias("silence")]
         [Summary("Mutes a user")]
@@ -188,6 +191,7 @@ namespace Justibot.Modules.Moderation
         {
             var application = await Context.Client.GetApplicationInfoAsync();
             var activeuser = Context.User as IGuildUser;
+            //checks if the initiating user has the rights to mute users or is the application owner
             if (activeuser.GuildPermissions.Has(GuildPermission.MuteMembers) || activeuser.Id == application.Owner.Id)
             {
                 if (Context.Message.MentionedUserIds.Count() < 1)
@@ -213,6 +217,7 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates unmuting a user
         [Command("Unmute")]
         [Summary("Unmutes a user")]
         [RequireBotPermissionAttribute(GuildPermission.MuteMembers)]
@@ -220,6 +225,7 @@ namespace Justibot.Modules.Moderation
         {
             var application = await Context.Client.GetApplicationInfoAsync();
             var activeuser = Context.User as IGuildUser;
+            //checks if initiating user has the right to unmute users or is the application owner
             if (activeuser.GuildPermissions.Has(GuildPermission.MuteMembers) || activeuser.Id == application.Owner.Id)
             {
                 if (Context.Message.MentionedUserIds.Count() < 1)
@@ -271,11 +277,13 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates the setting of the welcome message
         [Command("setWelcome")]
         public async Task welcome([RemainderAttribute]string prefix)
         {
             var activeuser = Context.User as IGuildUser;
             var application = await Context.Client.GetApplicationInfoAsync();
+            //checks if initiating user has administrator rights or is application owner
             if (activeuser.GuildPermissions.Has(GuildPermission.Administrator) || activeuser.Id == application.Owner.Id)
             {
                 WelcomeService.addWelcomes(Context.Guild, prefix);
@@ -288,11 +296,13 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates the setting of the leaving message
         [Command("setLeaving")]
         public async Task leaving([RemainderAttribute]string prefix)
         {
             var activeuser = Context.User as IGuildUser;
             var application = await Context.Client.GetApplicationInfoAsync();
+            //checks if the initiating user has adminstrator rights or is the application owner
             if (activeuser.GuildPermissions.Has(GuildPermission.Administrator) || activeuser.Id == application.Owner.Id)
             {
                 LeavingService.addLeaves(Context.Guild, prefix);
@@ -305,6 +315,7 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates silencing a user
         [Command("silence")]
         public async Task Silence(IUser userToSilence)
         {
@@ -314,6 +325,7 @@ namespace Justibot.Modules.Moderation
             var silent = Justibot.Loader.LoadPerm(user, "SILENCE");
             if (silent.Item1 == true)
             {
+                //checks if user has the rights to mute users and to manage messages, or is the application owner
                 if ((activeuser.GuildPermissions.Has(GuildPermission.MuteMembers) && activeuser.GuildPermissions.Has(GuildPermission.ManageMessages)) || activeuser.Id == application.Owner.Id)
                 {
                     bool isStaff = Justibot.Loader.isStaff(userToSilence as IGuildUser);
@@ -334,7 +346,7 @@ namespace Justibot.Modules.Moderation
                 }
             }
         }
-
+        //initiates grating a user talking rights again
         [Command("talk")]
         public async Task talk(IUser userToSilence)
         {
@@ -344,6 +356,7 @@ namespace Justibot.Modules.Moderation
             var silent = Justibot.Loader.LoadPerm(user, "SILENCE");
             if (silent.Item1 == true)
             {
+                //checks if user has the rights to mute users and to manage messages, or is the application owner
                 if ((activeuser.GuildPermissions.Has(GuildPermission.MuteMembers) && activeuser.GuildPermissions.Has(GuildPermission.ManageMessages)) || activeuser.Id == application.Owner.Id)
                 {
                     IRole joinerRole = user.Guild.GetRole(silent.Item2) as IRole;
@@ -357,7 +370,7 @@ namespace Justibot.Modules.Moderation
             }
         }
 
-
+        //initiates promoting a user to staff
         [Command("addstaff")]
         public async Task addStaff(IRole role)
         {
@@ -365,7 +378,8 @@ namespace Justibot.Modules.Moderation
             var activeuser = Context.User as IGuildUser;
             var silent = Justibot.Loader.LoadPerm(activeuser, "STAFF");
             if (silent.Item1 == true)
-            {
+            {   
+                //checks if initiating user has right to manage the guild
                 if (activeuser.GuildPermissions.Has(GuildPermission.ManageGuild) || activeuser.Id == application.Owner.Id)
                 {
                     Justibot.Saver.saveRole(activeuser, role.Id);
@@ -378,6 +392,7 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates the demotion of a user from staff to a normal user
         [Command("removestaff")]
         public async Task removeStaff(IRole role)
         {
@@ -386,6 +401,7 @@ namespace Justibot.Modules.Moderation
             var silent = Justibot.Loader.LoadPerm(activeuser, "STAFF");
             if (silent.Item1 == true)
             {
+                //checks if initiating user has right to manage the guild
                 if (activeuser.GuildPermissions.Has(GuildPermission.ManageGuild) || activeuser.Id == application.Owner.Id)
                 {
                     Justibot.Saver.deleteRole(activeuser, role.Id);
@@ -398,11 +414,13 @@ namespace Justibot.Modules.Moderation
             }
         }
 
+        //initiates adding a new role to the guild
         [Command("addRole")]
         public async Task addRole(IGuildUser user, IRole role)
         {
             var application = await Context.Client.GetApplicationInfoAsync();
             var activeuser = Context.User as IGuildUser;
+            //checks if the initiating user has the right to manage roles
             if (activeuser.GuildPermissions.Has(GuildPermission.ManageRoles) || activeuser.Id == application.Owner.Id)
             {
                 await user.AddRoleAsync(role);
@@ -415,11 +433,13 @@ namespace Justibot.Modules.Moderation
 
         }
 
+        //initiates removing a role 
         [Command("removeRole")]
         public async Task removeRole(IGuildUser user, IRole role)
         {
             var application = await Context.Client.GetApplicationInfoAsync();
             var activeuser = Context.User as IGuildUser;
+            //checks if the initiating user has the right to manage roles
             if (activeuser.GuildPermissions.Has(GuildPermission.ManageRoles) || activeuser.Id == application.Owner.Id)
             {
                 await user.RemoveRoleAsync(role);
@@ -432,6 +452,7 @@ namespace Justibot.Modules.Moderation
 
         }
 
+        //initiates setting bunker mode
         [Command("Bunker")]
         public async Task bunkermode(string mode)
         {
