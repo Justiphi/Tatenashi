@@ -7,7 +7,7 @@ namespace Justibot.Modules.Meme
 {
     public class MemeModule : ModuleBase
     {
-
+        //Command to initiate the ping command
         [Command("ping")]
         [Summary("Returns Pong!")]
         public async Task ping()
