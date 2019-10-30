@@ -284,5 +284,29 @@ namespace Justibot.Modules.Help
             await ReplyAsync(response.setup);
             await ReplyAsync(response.punchline);
         }
+
+        [Command("ChuckJoke")]
+        [Summary("Tells about chuck norris random joke")]
+        public async Task TellAChuckJoke()
+        {           
+            RestRequest request = new RestRequest(Method.GET);
+
+            client.BaseUrl = new Uri("https://api.chucknorris.io/jokes/random");
+            var response = await client.GetAsync<Joke>(request).ConfigureAwait(false);
+
+            await ReplyAsync(response.value);
+        }
+
+        [Command("Quotes")]
+        [Summary("Tells about random quotes")]
+        public async Task TellAChuckJoke()
+        {           
+            RestRequest request = new RestRequest(Method.GET);
+
+            client.BaseUrl = new Uri("https://api.kanye.rest/");
+            var response = await client.GetAsync<Joke>(request).ConfigureAwait(false);
+
+            await ReplyAsync(response.quote);
+        }
     }
 }
