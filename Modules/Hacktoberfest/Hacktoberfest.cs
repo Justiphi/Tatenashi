@@ -292,7 +292,7 @@ namespace Justibot.Modules.Help
             RestRequest request = new RestRequest(Method.GET);
 
             client.BaseUrl = new Uri("https://api.chucknorris.io/jokes/random");
-            var response = await client.GetAsync<Joke>(request).ConfigureAwait(false);
+            var response = await client.GetAsync<Another>(request).ConfigureAwait(false);
 
             await ReplyAsync(response.value);
         }
@@ -304,7 +304,7 @@ namespace Justibot.Modules.Help
             RestRequest request = new RestRequest(Method.GET);
 
             client.BaseUrl = new Uri("https://api.kanye.rest/");
-            var response = await client.GetAsync<Joke>(request).ConfigureAwait(false);
+            var response = await client.GetAsync<Another>(request).ConfigureAwait(false);
 
             await ReplyAsync(response.quote);
         }
