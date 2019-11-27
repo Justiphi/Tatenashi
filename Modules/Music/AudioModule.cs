@@ -20,7 +20,14 @@ namespace Justibot.Modules.AudioModule
         [Command("StartMusic", RunMode = RunMode.Async)]
         public async Task JoinVoiceChannel()
         {
-            await _service.JoinAudioAsync((Context.User as IVoiceState).VoiceChannel);
+            if((Context.User as IVoiceState).VoiceChannel != null)
+            {
+                await _service.JoinAudioAsync((Context.User as IVoiceState).VoiceChannel);
+            }
+            else
+            {
+                await ReplyAsync("You must be in a voice channel to use this.");
+            }
         }
 
         [Command("Play", RunMode = RunMode.Async)]
