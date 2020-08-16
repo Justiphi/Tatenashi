@@ -111,56 +111,65 @@ namespace Justibot.Modules.Moderation
         [Summary("Displays role message")]
         public async Task DisplayRoleMessage()
         {
-            var roleList = Loader.LoadReactionRoles(Context.Guild.Id);
 
-            Color color = new Color(0, 225, 255);
-
-            var author = new EmbedAuthorBuilder()
-                .WithName($"{Context.Client.CurrentUser.Username}\n");
-
-            string message = "";
-
-            IRole roleObj;
-            foreach (var role in roleList)
+            if ((Context.User as IGuildUser).GuildPermissions.Has(GuildPermission.ManageGuild))
             {
-                roleObj = Context.Guild.GetRole(role.Key);
-                List<GuildEmote> emote = Context.Guild.Emotes.Where(x => x.Name == role.Value).ToList();
+                var roleList = Loader.LoadReactionRoles(Context.Guild.Id);
 
-                if (emote.Count > 0)
+                if (roleList.Count() > 0)
                 {
-                    message += $"{emote.First()}:    {roleObj.Name} \n\n";
+
+                    Color color = new Color(0, 225, 255);
+
+                    var author = new EmbedAuthorBuilder()
+                        .WithName($"{Context.Client.CurrentUser.Username}\n");
+
+                    string message = "";
+
+                    IRole roleObj;
+                    foreach (var role in roleList)
+                    {
+                        roleObj = Context.Guild.GetRole(role.Key);
+                        List<GuildEmote> emote = Context.Guild.Emotes.Where(x => x.Name == role.Value).ToList();
+
+                        if (emote.Count > 0)
+                        {
+                            message += $"{emote.First()}:    {roleObj.Name} \n\n";
+                        }
+                        else
+                        {
+                            Emoji emoji = new Emoji(role.Value.ToString());
+                            message += $"{emoji}:    {roleObj.Name} \n\n";
+                        }
+                    }
+
+                    var embed = new EmbedBuilder()
+                        .WithColor(color)
+                        .WithAuthor(author)
+                        .WithTitle("Roles")
+                        .AddField(x => { x.Name = "Emote to get role:"; x.Value = message; x.WithIsInline(false); })
+                        .Build();
+
+
+                    var newMessage = await Context.Channel.SendMessageAsync("", false, embed);
+                    foreach (var role in roleList)
+                    {
+                        List<GuildEmote> emote = Context.Guild.Emotes.Where(x => x.Name == role.Value).ToList();
+
+                        if (emote.Count > 0)
+                        {
+                            await newMessage.AddReactionAsync(emote.First());
+                        }
+                        else
+                        {
+                            Emoji emoji = new Emoji(role.Value.ToString());
+                            await newMessage.AddReactionAsync(emoji);
+                        }
+                    }
+                    Saver.SaveRoleMessage(Context.Guild.Id, newMessage.Id);
                 }
-                else
-                {
-                    Emoji emoji = new Emoji(role.Value.ToString());
-                    message += $"{emoji}:    {roleObj.Name} \n\n";
-                }
+
             }
-
-            var embed = new EmbedBuilder()
-                .WithColor(color)
-                .WithAuthor(author)
-                .WithTitle("Roles")
-                .AddField(x => { x.Name = "Emote to get role:"; x.Value = message; x.WithIsInline(false); })
-                .Build();
-
-
-            var newMessage = await Context.Channel.SendMessageAsync("", false, embed);
-            foreach (var role in roleList)
-            {
-                List<GuildEmote> emote = Context.Guild.Emotes.Where(x => x.Name == role.Value).ToList();
-
-                if (emote.Count > 0)
-                {
-                    await newMessage.AddReactionAsync(emote.First());
-                }
-                else
-                {
-                    Emoji emoji = new Emoji(role.Value.ToString());
-                    await newMessage.AddReactionAsync(emoji);
-                }
-            }
-            Saver.SaveRoleMessage(Context.Guild.Id, newMessage.Id);
         }
 
     }
