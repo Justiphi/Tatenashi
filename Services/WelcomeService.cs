@@ -37,10 +37,10 @@ namespace Justibot.Services
             string prefix;
             using (var context = new DataContext())
             {
-                var perms2 = context.welcomeMessages
+                var perms2 = context.welcomeMessages.AsQueryable()
                     .Where(b => b.welcomeGuild.Equals(guild.Id))
                     .ToList();
-                if (perms2.Count != 0)
+                if (perms2.Count() != 0)
                 {
                     var perms = perms2.First();
 
@@ -87,10 +87,10 @@ namespace Justibot.Services
             string prefix;
             using (var context = new DataContext())
             {
-                var perms2 = context.leavingMessages
+                var perms2 = context.leavingMessages.AsQueryable()
                     .Where(b => b.leavingGuild.Equals(guild.Id))
                     .ToList();
-                if (perms2.Count != 0)
+                if (perms2.Count() != 0)
                 {
                     var perms = perms2.First();
 

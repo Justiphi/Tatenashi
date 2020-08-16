@@ -13,11 +13,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.ServerPerms
+                var perms = db.ServerPerms.AsQueryable()
                     .Where(b => b.PServId.Equals(user.GuildId) && b.SPerm.Equals(permTC))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new ServerPerm { PServId = serverID, SPerm = permTC, PermActive = activ, PermArg = args, Pmode = mode }; 
@@ -43,7 +43,7 @@ namespace Justibot
                 var giveaway = db.versionChecks
                     .ToList();
 
-                if(giveaway.Count == 0)
+                if(giveaway.Count() == 0)
                 {
                     versionControl control = new versionControl{time = dater, version = version};
                     db.Add(control);
@@ -67,17 +67,18 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.Givaways
+                var perms = db.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     var permTS = new Giveaway { GservID = serverID, prize = prizes, GActive = activ, Gchannel = args,}; 
                     db.Givaways.Add(permTS);
                     db.SaveChanges();
 
-                    var giving = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
+                    var giving = db.Givaways.AsQueryable()
+                        .Where(b => b.GservID == serverID).Include(x => x.Entries).First();
                     var giver = new Entry{ entrentID = user.Id, ishost = true, Giveaway = giving};
                     giving.Entries.Add(giver);
                     db.SaveChanges();                    
@@ -90,7 +91,8 @@ namespace Justibot
                     EPerm.prize = prizes;
                     db.SaveChanges();
                     
-                    var giving = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
+                    var giving = db.Givaways.AsQueryable()
+                        .Where(b => b.GservID == serverID).Include(x => x.Entries).First();
                     Entry host = new Entry{ entrentID = user.Id, ishost = true, Giveaway = giving};
                     giving.Entries.Add(host);
                     db.SaveChanges();
@@ -105,17 +107,18 @@ namespace Justibot
             ulong serverID = user.Guild.Id;
             using (var db = new DataContext())
             {
-                var perms = db.Givaways
+                var perms = db.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     return;                
                 }
                 else
                 {
-                    var giving = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
+                    var giving = db.Givaways.AsQueryable()
+                        .Where(b => b.GservID == serverID).Include(x => x.Entries).First();
                     Entry host = new Entry{ entrentID = user.Id, ishost = false, Giveaway = giving};
                     giving.Entries.Add(host);
                     db.SaveChanges();
@@ -129,19 +132,20 @@ namespace Justibot
             ulong serverID = user.Guild.Id;
             using (var db = new DataContext())
             {
-                var giveaway = db.Givaways
+                var giveaway = db.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .Include(x => x.Entries)
                     .ToList();
 
-                if(giveaway.Count == 0)
+                if(giveaway.Count() == 0)
                 {
                     return;                
                 }
                 else
                 {
-                    var EPerm = db.Givaways.Where(b => b.GservID == serverID).Include(x => x.Entries).First();
-                    if(EPerm.Entries.Count > 1)
+                    var EPerm = db.Givaways.AsQueryable()
+                        .Where(b => b.GservID == serverID).Include(x => x.Entries).First();
+                    if(EPerm.Entries.Count() > 1)
                     {
                         db.RemoveRange(EPerm.Entries.Where(b => b.ishost == false));
                         db.SaveChanges();
@@ -156,11 +160,11 @@ namespace Justibot
             ulong serverID = user.Guild.Id;
             using (var db = new DataContext())
             {
-                var giveaway = db.globalusersxp
+                var giveaway = db.globalusersxp.AsQueryable()
                     .Where(b => b.User.Equals(user.Id))
                     .ToList();
 
-                if(giveaway.Count == 0)
+                if(giveaway.Count() == 0)
                 {
                     globaluserxp server = new globaluserxp{User = user.Id, Xp = xp};
                     db.Add(server);
@@ -183,18 +187,19 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.serversxp
+                var perms = db.serversxp.AsQueryable()
                     .Where(b => b.xServId.Equals(user.GuildId))
                     .Include(x => x.usersXp)
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     var permTS = new serverxp { xServId = serverID, Xp = sxp}; 
                     db.serversxp.Add(permTS);
                     db.SaveChanges();
 
-                    var giving = db.serversxp.Where(b => b.xServId == serverID).Include(x => x.usersXp).First();
+                    var giving = db.serversxp.AsQueryable()
+                        .Where(b => b.xServId == serverID).Include(x => x.usersXp).First();
                     var giver = new serveruserxp{ User = user.Id, Xp = uxp};
                     giving.usersXp.Add(giver);
                     db.SaveChanges();                    
@@ -207,7 +212,7 @@ namespace Justibot
                     db.SaveChanges();
                     
                     var giving2 = EPerm.usersXp.Where(x => x.User == user.Id).ToList();
-                    if(giving2.Count == 0)
+                    if(giving2.Count() == 0)
                     {
                         serveruserxp host = new serveruserxp{ User = user.Id, Xp = uxp};
                         EPerm.usersXp.Add(host);
@@ -231,12 +236,12 @@ namespace Justibot
             ulong serverID = user.Guild.Id;
             using (var db = new DataContext())
             {
-                var perms = db.serversxp
+                var perms = db.serversxp.AsQueryable()
                     .Where(b => b.xServId.Equals(user.GuildId))
                     .Include(b => b.usersXp)
                     .ToList();
                 
-                if(perms.Count != 0)
+                if(perms.Count() != 0)
                 {
                     var servers = perms.First();
                     db.RemoveRange(servers.usersXp.ToList());
@@ -256,12 +261,12 @@ namespace Justibot
             ulong serverID = user.Guild.Id;
             using (var db = new DataContext())
             {
-                var perms = db.serversxp
+                var perms = db.serversxp.AsQueryable()
                     .Where(b => b.xServId.Equals(user.GuildId))
                     .Include(b => b.usersXp)
                     .ToList();
                 
-                if(perms.Count != 0)
+                if(perms.Count() != 0)
                 {
                     var servers = perms.First();
                     db.RemoveRange(servers.usersXp.ToList());
@@ -282,7 +287,7 @@ namespace Justibot
                 var perms = db.serverusersxp
                     .ToList();
                 
-                if(perms.Count != 0)
+                if(perms.Count() != 0)
                 {
                     db.RemoveRange(perms);
                     db.SaveChanges();
@@ -293,7 +298,7 @@ namespace Justibot
                 var perms = db.serversxp
                     .ToList();
                 
-                if(perms.Count != 0)
+                if(perms.Count() != 0)
                 {
                     db.RemoveRange(perms);
                     db.SaveChanges();
@@ -304,7 +309,7 @@ namespace Justibot
                 var perms = db.globalusersxp
                     .ToList();
                 
-                if(perms.Count != 0)
+                if(perms.Count() != 0)
                 {
                     db.RemoveRange(perms);
                     db.SaveChanges();
@@ -318,11 +323,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.rewards
+                var perms = db.rewards.AsQueryable()
                     .Where(b => b.rserver.Equals(user.GuildId) && b.rewardrole.Equals(role))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new reward { rserver = serverID, rewardrole = role, rewardlvl = level }; 
@@ -344,11 +349,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.blacklists
+                var perms = db.blacklists.AsQueryable()
                     .Where(b => b.bserver.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new blacklist { bserver = serverID}; 
@@ -370,11 +375,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.blacklists
+                var perms = db.blacklists.AsQueryable()
                     .Where(b => b.bserver.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                 }
                 else
@@ -392,11 +397,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.rewards
+                var perms = db.rewards.AsQueryable()
                     .Where(b => b.rserver.Equals(user.GuildId) && b.rewardrole.Equals(role))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     return(false);
                 }
@@ -414,12 +419,12 @@ namespace Justibot
         {
             using (var db = new DataContext())
             {
-                var giveaway = db.Givaways
+                var giveaway = db.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .Include(x => x.Entries)
                     .ToList();
 
-                if(giveaway.Count == 0)
+                if(giveaway.Count() == 0)
                 {
                     return;                
                 }
@@ -439,11 +444,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.staffRoles
+                var perms = db.staffRoles.AsQueryable()
                     .Where(b => b.RServId.Equals(user.GuildId) && b.PermArg.Equals(args))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new staffRole { RServId = serverID, PermArg = args }; 
@@ -465,11 +470,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.staffRoles
+                var perms = db.staffRoles.AsQueryable()
                     .Where(b => b.RServId.Equals(user.GuildId) && b.PermArg.Equals(args))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     return(false);
                 }
@@ -488,11 +493,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.musics
+                var perms = db.musics.AsQueryable()
                     .Where(b => b.Tserver.Equals(user.GuildId) && b.Tname.Equals(track))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new music { Tserver = serverID, Tname = track }; 
@@ -508,7 +513,7 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.musics
+                var perms = db.musics.AsQueryable()
                     .Where(b => b.Tserver.Equals(user.GuildId) && b.Tname.Equals(track))
                     .First();
 
@@ -522,7 +527,7 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.musics
+                var perms = db.musics.AsQueryable()
                     .Where(b => b.Tserver.Equals(user.GuildId))
                     .ToList();
 
@@ -546,7 +551,7 @@ namespace Justibot
         {
             using (var db = new DataContext())
             {
-                var adminToAdd = db.admins
+                var adminToAdd = db.admins.AsQueryable()
                     .Where(x => x.staffMember == adminId)
                     .First();
                 db.admins.Remove(adminToAdd);
@@ -559,11 +564,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.prefixes
+                var perms = db.prefixes.AsQueryable()
                     .Where(b => b.prefixGuild.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new ServPrefix { prefixGuild = serverID, prefix = prefix }; 
@@ -585,11 +590,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.welcomeMessages
+                var perms = db.welcomeMessages.AsQueryable()
                     .Where(b => b.welcomeGuild.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new WelcomeMessage { welcomeGuild = serverID, message = prefix }; 
@@ -611,11 +616,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.leavingMessages
+                var perms = db.leavingMessages.AsQueryable()
                     .Where(b => b.leavingGuild.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     ulong serverID = user.GuildId;
                     var permTS = new LeavingMessage { leavingGuild = serverID, message = prefix }; 
@@ -637,10 +642,10 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var notes = db.notes
+                var notes = db.notes.AsQueryable()
                     .Where(b => b.User.Equals(user.Id))
                     .ToList();
-                if(notes.Count >= Settings.maxUserNotes && !(Owner))
+                if(notes.Count() >= Settings.maxUserNotes && !(Owner))
                 {
                     return("Failed, Notes limit reached.");
                 }
@@ -660,10 +665,10 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var notes = db.notes
+                var notes = db.notes.AsQueryable()
                     .Where(b => b.User.Equals(user.Id))
                     .ToList();
-                if(notes.Count >= Settings.maxServerNotes)
+                if(notes.Count() >= Settings.maxServerNotes)
                 {
                     return("Failed, Notes limit reached.");
                 }
@@ -683,10 +688,10 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var notes = db.notes
+                var notes = db.notes.AsQueryable()
                     .Where(b => b.User.Equals(user.Id))
                     .ToList();
-                if(notes.Count >= Settings.maxStaffNotes)
+                if(notes.Count() >= Settings.maxStaffNotes)
                 {
                     return("Failed, Notes limit reached.");
                 }
@@ -706,11 +711,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var notes = db.notes
+                var notes = db.notes.AsQueryable()
                     .Where(b => b.User.Equals(user.Id) && b.NoteID.Equals(id))
                     .ToList();
 
-                if(notes.Count == 0)
+                if(notes.Count() == 0)
                 {
                     return("failed");
                 }
@@ -729,11 +734,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var notes = db.notes
+                var notes = db.notes.AsQueryable()
                     .Where(b => b.nServId.Equals(user.GuildId) && (b.Type.Equals(3) || b.Type.Equals(4)) && b.NoteID.Equals(id))
                     .ToList();
 
-                if(notes.Count == 0)
+                if(notes.Count() == 0)
                 {
                     return("failed");
                 }
@@ -754,11 +759,11 @@ namespace Justibot
             using (var db = new DataContext())
             {
 
-                var perms = db.Tournaments
+                var perms = db.Tournaments.AsQueryable()
                     .Where(b => b.TservID.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     var permTS = new Tournament { TservID = serverID, Title = prizes, Tactive = activ, Tchannel = args, joinable = join, Thost= user.Id }; 
                     db.Tournaments.Add(permTS);
@@ -784,17 +789,18 @@ namespace Justibot
             ulong serverID = user.Guild.Id;
             using (var db = new DataContext())
             {
-                var perms = db.Tournaments
+                var perms = db.Tournaments.AsQueryable()
                     .Where(b => b.TservID.Equals(user.GuildId))
                     .ToList();
 
-                if(perms.Count == 0)
+                if(perms.Count() == 0)
                 {
                     return;                
                 }
                 else
                 {
-                    var giving = db.Tournaments.Where(b => b.TservID == serverID).Include(x => x.players).First();
+                    var giving = db.Tournaments.AsQueryable()
+                        .Where(b => b.TservID == serverID).Include(x => x.players).First();
                     int team = 1;
                     foreach(var play in giving.players.OrderBy(x => x.teamNo))
                     {
@@ -813,6 +819,70 @@ namespace Justibot
                 }
             }
             return;
+        }
+
+        public static void SaveReactionRole(ulong guildId, string reaction, ulong roleId)
+        {
+            using (var db = new DataContext())
+            {
+                var roles = db.roleReactions.AsQueryable()
+                    .Where(x => x.roleId == roleId && x.guildId == guildId).ToList();
+                if(roles.Count() > 0)
+                {
+                    var dbItem = roles.First();
+                    dbItem.reaction = reaction;
+                    db.Update(dbItem);
+                } 
+                else
+                {
+                    var dbItem = new roleReaction();
+                    dbItem.guildId = guildId;
+                    dbItem.reaction = reaction;
+                    dbItem.roleId = roleId;
+                    db.Add(dbItem);
+                }
+                db.SaveChanges();
+            }
+            return;
+        }
+
+        public static void RemoveReactionRole(ulong guildId, ulong roleId)
+        {
+            using (var db = new DataContext())
+            {
+                var roles = db.roleReactions.AsQueryable()
+                    .Where(x => x.roleId == roleId && x.guildId == guildId).ToList();
+                if(roles.Count() > 0)
+                {
+                    var dbItem = roles.First();
+                    db.Remove(dbItem);
+                }
+                db.SaveChanges();
+            }
+            return;
+        }
+
+        public static void SaveRoleMessage(ulong guildId, ulong messageId)
+        {
+            using (var db = new DataContext())
+            {
+                var messages = db.roleMessages.AsQueryable()
+                    .Where(x => x.guildId == guildId).ToList();
+                if(messages.Count() == 0)
+                {
+                    var message = new roleMessage();
+                    message.guildId = guildId;
+                    message.MessageId = messageId;
+                    db.Add(message);
+                }
+                else
+                {
+                    var message = messages.First();
+                    message.MessageId = messageId;
+                    db.Update(message);
+                }
+                db.SaveChanges();
+            }
         }
 
 

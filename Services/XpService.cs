@@ -92,10 +92,10 @@ namespace Justibot.Services
                     int gxp = 0;
                     using (var context = new DataContext())
                     {
-                        var perms2 = context.globalusersxp
+                        var perms2 = context.globalusersxp.AsQueryable()
                             .Where(x => x.User == user.Id)
                             .ToList();
-                        if (perms2.Count != 0)
+                        if (perms2.Count() != 0)
                         {
                             gxp = perms2.First().Xp;
                         }
@@ -116,10 +116,10 @@ namespace Justibot.Services
 
                         using (var context = new DataContext())
                         {
-                            var perms2 = context.serverusersxp
+                            var perms2 = context.serverusersxp.AsQueryable()
                                 .Where(x => (x.User == user.Id) && (x.Server.xServId == guild.Id))
                                 .ToList();
-                            if (perms2.Count != 0)
+                            if (perms2.Count() != 0)
                             {
                                 usexp = perms2.First().Xp;
                             }
@@ -131,10 +131,10 @@ namespace Justibot.Services
 
                         using (var context = new DataContext())
                         {
-                            var perms2 = context.serversxp
+                            var perms2 = context.serversxp.AsQueryable()
                                 .Where(x => x.xServId == guild.Id)
                                 .ToList();
-                            if (perms2.Count != 0)
+                            if (perms2.Count() != 0)
                             {
                                 servexp = perms2.First().Xp;
                             }

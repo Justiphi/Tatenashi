@@ -75,10 +75,10 @@ namespace Justibot.Services
             char prefix;
             using (var context = new DataContext())
             {
-                var perms2 = context.prefixes
+                var perms2 = context.prefixes.AsQueryable()
                     .Where(b => b.prefixGuild.Equals(guild.Id))
                     .ToList();
-                if (perms2.Count != 0)
+                if (perms2.Count() != 0)
                 {
                     var perms = perms2.First();
 

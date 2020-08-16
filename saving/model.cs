@@ -25,6 +25,8 @@ namespace Justibot
         public DbSet<reward> rewards { get; set; }
         public DbSet<versionControl> versionChecks { get; set; }
         public DbSet<blacklist> blacklists { get; set; }
+        public DbSet<roleMessage> roleMessages { get; set; }
+        public DbSet<roleReaction> roleReactions { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -198,5 +200,19 @@ namespace Justibot
     {
         public int blacklistID { get; set; }
         public ulong bserver { get; set; }
+    }
+
+    public class roleMessage
+    {
+        public int roleMessageId {get; set;}
+        public ulong MessageId {get; set;}
+        public ulong guildId {get; set;}
+    }
+    public class roleReaction
+    {
+        public int roleReactionId {get; set;}
+        public string reaction {get; set;}
+        public ulong roleId {get; set;}
+        public ulong guildId {get; set;}
     }
 }

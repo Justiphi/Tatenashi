@@ -311,6 +311,43 @@ namespace Justibot
                 }
                 
             };
+            
+            client.ReactionAdded += async (Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel originChannel, SocketReaction reaction) =>
+            {
+                var user = (reaction.User.Value as IGuildUser);
+                if (Loader.getRoleMessage(user) == reaction.MessageId)
+                {
+                    var role = Loader.getRole(user, reaction.Emote.Name);
+                    var newRole = user.Guild.GetRole(role);
+                    if (newRole != null)
+                    {
+                        await user.AddRoleAsync(newRole);
+                    }
+                }
+                else
+                {
+                    var message = await reaction.Channel.GetMessageAsync(reaction.MessageId);
+                    Modules.Moderation.RolesModule.checkMessage(message, user.Id, reaction.Emote.Name, user.Guild);
+                }
+            };
+
+            client.ReactionRemoved += async (Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel originChannel, SocketReaction reaction) =>
+            {
+                var user = (reaction.User.Value as IGuildUser);
+                if (!user.IsBot)
+                {
+                    if (Loader.getRoleMessage(user) == reaction.MessageId)
+                    {
+                        var role = Loader.getRole(user, reaction.Emote.Name);
+                        var newRole = user.Guild.GetRole(role);
+                        if (newRole != null)
+                        {
+                            await user.RemoveRoleAsync(newRole);
+                        }
+                    }
+                }
+            };
+
             //initialize commands and commandhandler
             handler = new CommandHandler();
             await handler.InitCommands(client);

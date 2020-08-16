@@ -20,12 +20,12 @@ namespace Justibot
             using (var context = new DataContext())
             {
                 //Capture perms for current context
-                var perms = context.ServerPerms
+                var perms = context.ServerPerms.AsQueryable()
                 .Where(b => b.PServId.Equals(user.GuildId) && b.SPerm.Equals(permTL))
                 .ToList();
 
 
-                if (perms.Count == 0)
+                if (perms.Count() == 0)
                 {
                     permAct = false;
                     channel = user.Guild.DefaultChannelId;
@@ -50,14 +50,14 @@ namespace Justibot
 
             using (var context = new DataContext())
             {
-                var giveaway = context.Givaways
+                var giveaway = context.Givaways.AsQueryable()
                 .Where(b => b.GservID.Equals(user.GuildId))
                 .ToList();
 
-                List<string> test = context.Givaways.Select(x => x.prize).ToList();
+                List<string> test = context.Givaways.AsQueryable().Select(x => x.prize).ToList();
 
 
-                if (giveaway.Count == 0)
+                if (giveaway.Count() == 0)
                 {
                     giveAct = false;
                     channel = user.Guild.DefaultChannelId;
@@ -79,13 +79,13 @@ namespace Justibot
             ulong hostID = 1;
             using (var context = new DataContext())
             {
-                var giveaway = context.Givaways
+                var giveaway = context.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .Include(x => x.Entries)
                     .ToList();
 
 
-                if (giveaway.Count == 0)
+                if (giveaway.Count() == 0)
                 {
                     hostID = 1;
                 }
@@ -103,12 +103,12 @@ namespace Justibot
             ulong hostID = 1;
             using (var context = new DataContext())
             {
-                var giveaway = context.Tournaments
+                var giveaway = context.Tournaments.AsQueryable()
                     .Where(b => b.TservID.Equals(user.GuildId))
                     .ToList();
 
 
-                if (giveaway.Count == 0)
+                if (giveaway.Count() == 0)
                 {
                     hostID = 1;
                 }
@@ -126,13 +126,13 @@ namespace Justibot
             int entcount = 0;
             using (var context = new DataContext())
             {
-                var giveaway = context.Givaways
+                var giveaway = context.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .Include(x => x.Entries)
                     .ToList();
 
 
-                if (giveaway.Count == 0)
+                if (giveaway.Count() == 0)
                 {
                     entcount = 0;
                 }
@@ -150,14 +150,14 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var giveaway = context.Givaways
+                var giveaway = context.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .Include(x => x.Entries)
                     .First();
 
                 var host = giveaway.Entries.Where(x => x.entrentID.Equals(user.Id)).ToList();
 
-                if (host.Count == (0))
+                if (host.Count() == (0))
                 {
                     return (false);
                 }
@@ -172,7 +172,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var giveaway = context.Givaways
+                var giveaway = context.Givaways.AsQueryable()
                     .Where(b => b.GservID.Equals(user.GuildId))
                     .Include(x => x.Entries)
                     .First();
@@ -190,7 +190,7 @@ namespace Justibot
             bool userStaff = false;
             using (var context = new DataContext())
             {
-                var staffoles = context.staffRoles
+                var staffoles = context.staffRoles.AsQueryable()
                     .Where(b => b.RServId.Equals(user.GuildId))
                     .ToList();
 
@@ -216,7 +216,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var tracks = context.musics
+                var tracks = context.musics.AsQueryable()
                     .Where(b => b.Tserver.Equals(user.GuildId))
                     .Select(x => x.Tname)
                     .ToList();
@@ -229,18 +229,18 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var tracks = context.musics
+                var tracks = context.musics.AsQueryable()
                     .Where(b => b.Tserver.Equals(user.GuildId))
                     .Select(x => x.Tname)
                     .ToList();
 
-                if (tracks.Count == 0)
+                if (tracks.Count() == 0)
                 {
                     return (0);
                 }
                 else
                 {
-                    return (tracks.Count);
+                    return (tracks.Count());
                 }
             }
         }
@@ -248,11 +248,11 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var tracks = context.musics
+                var tracks = context.musics.AsQueryable()
                     .Where(b => b.Tserver.Equals(guild))
                     .ToList();
 
-                if (tracks.Count == 0)
+                if (tracks.Count() == 0)
                 {
                     return (false);
                 }
@@ -267,7 +267,7 @@ namespace Justibot
         {
             using (var db = new DataContext())
             {
-                var adminList = db.admins
+                var adminList = db.admins.AsQueryable()
                     .Select(x => x.staffMember)
                     .ToList();
 
@@ -291,7 +291,7 @@ namespace Justibot
                 
                 string version;
                 DateTime date;
-                if(versionCheker.Count == 0)
+                if(versionCheker.Count() == 0)
                 {
                     date = DateTime.Now;
                     version = "nill";
@@ -320,12 +320,12 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes
+                var content = context.notes.AsQueryable()
                     .Where(b => (b.User.Equals(user.Id) && b.Type.Equals(1)))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
                 
-                if(content.Count == 0)
+                if(content.Count() == 0)
                 {
                     content.Add("No public notes found by this user.");
                 }
@@ -336,12 +336,12 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes
+                var content = context.notes.AsQueryable()
                     .Where(b => (b.User.Equals(user.Id) && b.Type.Equals(2)))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
                 
-                if(content.Count == 0)
+                if(content.Count() == 0)
                 {
                     content.Add("No public notes found by this user.");
                 }
@@ -353,12 +353,12 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes
+                var content = context.notes.AsQueryable()
                     .Where(b => (b.Type.Equals(4)) && b.nServId.Equals(user.GuildId))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
 
-                if(content.Count == 0)
+                if(content.Count() == 0)
                 {
                     content.Add("No staff notes found.");
                 }
@@ -369,12 +369,12 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes
+                var content = context.notes.AsQueryable()
                     .Where(b => (b.Type.Equals(3)) && b.nServId.Equals(user.GuildId))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
 
-                if(content.Count == 0)
+                if(content.Count() == 0)
                 {
                     content.Add("No server notes found.");
                 }
@@ -386,13 +386,13 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.Tournaments
+                var content = context.Tournaments.AsQueryable()
                     .Where(b => b.TservID.Equals(user.GuildId))
                     .ToList();
 
                 int content2 = 0;
 
-                if(content.Count == 0)
+                if(content.Count() == 0)
                 {
                     content2 = 0 ;
                 }
@@ -405,6 +405,61 @@ namespace Justibot
                     content2 = 1;
                 }
                 return (content2);
+            }
+        }
+
+        public static ulong getRoleMessage(IGuildUser user)
+        {
+            using(var context = new DataContext())
+            {
+                var content = context.roleMessages.AsQueryable()
+                    .Where(x => x.guildId.Equals(user.GuildId))
+                    .ToList();
+
+                if(content.Count() == 0)
+                {
+                    return(0);
+                } 
+                else
+                {
+                    return content.First().MessageId;
+                }
+            }
+        }
+
+        public static ulong getRole(IGuildUser user, string reaction)
+        {
+            using(var context = new DataContext())
+            {
+                var content = context.roleReactions.AsQueryable()
+                    .Where(x => x.guildId.Equals(user.GuildId) && x.reaction.ToString() == reaction.ToString())
+                    .ToList();
+
+                if(content.Count() == 0)
+                {
+                    return(0);
+                } 
+                else
+                {
+                    return content.Select(x => x.roleId).First();
+                }
+            }
+        }
+
+        public static Dictionary<ulong, string> LoadReactionRoles(ulong guildId)
+        {
+            using(var context = new DataContext())
+            {
+                var returnDict = new Dictionary<ulong, string>();
+
+                var roles = context.roleReactions.AsQueryable()
+                    .Where(x => x.guildId == guildId).ToList();
+
+                foreach(var role in roles)
+                {
+                    returnDict.Add(role.roleId, role.reaction);
+                }
+                return returnDict;
             }
         }
 
