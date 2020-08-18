@@ -18,50 +18,58 @@ namespace Justibot.Modules.Moderation
         public async static void checkMessage(IMessage message, ulong userId, string reaction, IGuild guild)
         {
             KeyValuePair<ulong, ulong> item;
-
-            if (MessageUserRoleList.TryGetValue(message.Id, out item))
+            try
             {
-                if (item.Key == userId)
+                if (message == null)
                 {
-                    bool saving = true;
-                    List<GuildEmote> emote = guild.Emotes.Where(x => x.Name == reaction).ToList();
+                    return;
+                }
+                if (MessageUserRoleList.TryGetValue(message.Id, out item))
+                {
+                    if (item.Key == userId)
+                    {
+                        bool saving = true;
+                        List<GuildEmote> emote = guild.Emotes.Where(x => x.Name == reaction).ToList();
 
-                    if (emote.Count == 0)
-                    {
-                        var stringInfo = new System.Globalization.StringInfo(reaction);
-                        if (stringInfo.LengthInTextElements != 1)
+                        if (emote.Count == 0)
                         {
-                            saving = false;
+                            var stringInfo = new System.Globalization.StringInfo(reaction);
+                            if (stringInfo.LengthInTextElements != 1)
+                            {
+                                saving = false;
+                            }
                         }
-                    }
 
-                    if (saving)
-                    {
-                        Saver.SaveReactionRole(guild.Id, reaction, item.Value);
-                        MessageUserRoleList.Remove(message.Id);
-                        var message2 = await message.Channel.SendMessageAsync("Role added to list");
-                        await Task.Delay(3000);
-                        try
+                        if (saving)
                         {
-                            await message.DeleteAsync();
-                            await message2.DeleteAsync();
+                            Saver.SaveReactionRole(guild.Id, reaction, item.Value);
+                            MessageUserRoleList.Remove(message.Id);
+                            var message2 = await message.Channel.SendMessageAsync("Role added to list");
+                            await Task.Delay(3000);
+                            try
+                            {
+                                await message.DeleteAsync();
+                                await message2.DeleteAsync();
+                            }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
-                    }
-                    else
-                    {
-                        var message2 = await message.Channel.SendMessageAsync("Invalid Reaction, please use an emoji or emote from the current server");
-                        await Task.Delay(3000);
-                        try
+                        else
                         {
-                            await message2.DeleteAsync();
+                            var message2 = await message.Channel.SendMessageAsync("Invalid Reaction, please use an emoji or emote from the current server");
+                            await Task.Delay(3000);
+                            try
+                            {
+                                await message2.DeleteAsync();
+                            }
+                            catch
+                            { }
                         }
-                        catch
-                        { }
                     }
                 }
             }
+            catch
+            { }
         }
 
         [Group("ReactionRole")]
