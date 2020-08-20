@@ -20,7 +20,7 @@ namespace Justibot
             using (var context = new DataContext())
             {
                 //Capture perms for current context
-                var perms = context.ServerPerms.AsQueryable()
+                var perms = context.ServerPerms.AsEnumerable()
                 .Where(b => b.PServId.Equals(user.GuildId) && b.SPerm.Equals(permTL))
                 .ToList();
 
@@ -50,11 +50,11 @@ namespace Justibot
 
             using (var context = new DataContext())
             {
-                var giveaway = context.Givaways.AsQueryable()
+                var giveaway = context.Givaways.AsEnumerable()
                 .Where(b => b.GservID.Equals(user.GuildId))
                 .ToList();
 
-                List<string> test = context.Givaways.AsQueryable().Select(x => x.prize).ToList();
+                List<string> test = context.Givaways.AsEnumerable().Select(x => x.prize).ToList();
 
 
                 if (giveaway.Count() == 0)
@@ -103,7 +103,7 @@ namespace Justibot
             ulong hostID = 1;
             using (var context = new DataContext())
             {
-                var giveaway = context.Tournaments.AsQueryable()
+                var giveaway = context.Tournaments.AsEnumerable()
                     .Where(b => b.TservID.Equals(user.GuildId))
                     .ToList();
 
@@ -190,7 +190,7 @@ namespace Justibot
             bool userStaff = false;
             using (var context = new DataContext())
             {
-                var staffoles = context.staffRoles.AsQueryable()
+                var staffoles = context.staffRoles.AsEnumerable()
                     .Where(b => b.RServId.Equals(user.GuildId))
                     .ToList();
 
@@ -216,7 +216,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var tracks = context.musics.AsQueryable()
+                var tracks = context.musics.AsEnumerable()
                     .Where(b => b.Tserver.Equals(user.GuildId))
                     .Select(x => x.Tname)
                     .ToList();
@@ -229,7 +229,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var tracks = context.musics.AsQueryable()
+                var tracks = context.musics.AsEnumerable()
                     .Where(b => b.Tserver.Equals(user.GuildId))
                     .Select(x => x.Tname)
                     .ToList();
@@ -248,7 +248,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var tracks = context.musics.AsQueryable()
+                var tracks = context.musics.AsEnumerable()
                     .Where(b => b.Tserver.Equals(guild))
                     .ToList();
 
@@ -267,7 +267,7 @@ namespace Justibot
         {
             using (var db = new DataContext())
             {
-                var adminList = db.admins.AsQueryable()
+                var adminList = db.admins.AsEnumerable()
                     .Select(x => x.staffMember)
                     .ToList();
 
@@ -320,7 +320,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes.AsQueryable()
+                var content = context.notes.AsEnumerable()
                     .Where(b => (b.User.Equals(user.Id) && b.Type.Equals(1)))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
@@ -336,7 +336,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes.AsQueryable()
+                var content = context.notes.AsEnumerable()
                     .Where(b => (b.User.Equals(user.Id) && b.Type.Equals(2)))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
@@ -353,7 +353,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes.AsQueryable()
+                var content = context.notes.AsEnumerable()
                     .Where(b => (b.Type.Equals(4)) && b.nServId.Equals(user.GuildId))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
@@ -369,7 +369,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.notes.AsQueryable()
+                var content = context.notes.AsEnumerable()
                     .Where(b => (b.Type.Equals(3)) && b.nServId.Equals(user.GuildId))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
@@ -386,7 +386,7 @@ namespace Justibot
         {
             using (var context = new DataContext())
             {
-                var content = context.Tournaments.AsQueryable()
+                var content = context.Tournaments.AsEnumerable()
                     .Where(b => b.TservID.Equals(user.GuildId))
                     .ToList();
 
@@ -412,7 +412,7 @@ namespace Justibot
         {
             using(var context = new DataContext())
             {
-                var content = context.roleMessages.AsQueryable()
+                var content = context.roleMessages.AsEnumerable()
                     .Where(x => x.guildId.Equals(user.GuildId))
                     .ToList();
 
@@ -431,8 +431,8 @@ namespace Justibot
         {
             using(var context = new DataContext())
             {
-                var content = context.roleReactions.AsQueryable()
-                    .Where(x => x.guildId.Equals(user.GuildId) && x.reaction.ToString() == reaction.ToString())
+                var content = context.roleReactions.AsEnumerable()
+                    .Where(x => x.guildId.Equals(user.GuildId) && x.reaction.ToString().Equals(reaction.ToString()))
                     .ToList();
 
                 if(content.Count() == 0)
@@ -452,7 +452,7 @@ namespace Justibot
             {
                 var returnDict = new Dictionary<ulong, string>();
 
-                var roles = context.roleReactions.AsQueryable()
+                var roles = context.roleReactions.AsEnumerable()
                     .Where(x => x.guildId == guildId).ToList();
 
                 foreach(var role in roles)
