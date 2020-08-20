@@ -453,7 +453,7 @@ namespace Justibot
                 var returnDict = new Dictionary<ulong, string>();
 
                 var roles = context.roleReactions.AsEnumerable()
-                    .Where(x => x.guildId == guildId).ToList();
+                    .Where(x => x.guildId.Equals(guildId)).ToList();
 
                 foreach(var role in roles)
                 {
