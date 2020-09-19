@@ -7,4 +7,10 @@
         public string setup { get; set; }
         public string punchline { get; set; }
     }
+
+    public class Another
+    {
+        public string value { get; set; }
+        public string quote { get; set; }
+    }
 }
