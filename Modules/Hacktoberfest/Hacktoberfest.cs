@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using Justibot.Services;
-using System.Web;
 using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web;
+using Discord.Commands;
+using Justibot.Services;
+using justibot_server.Modules.Hacktoberfest.Model;
 using justibot_server.Modules.OpenWeather;
 using RestSharp;
-using justibot_server.Modules.Hacktoberfest.Model;
 
 namespace Justibot.Modules.Help
 {
@@ -283,6 +282,25 @@ namespace Justibot.Modules.Help
 
             await ReplyAsync(response.setup);
             await ReplyAsync(response.punchline);
+        }
+
+        [Command("Image")]
+        [Summary("Get a random image keywords.")]
+        public async Task GetRandomImage([Remainder] string keywords)
+        {
+            if (string.IsNullOrWhiteSpace(keywords))
+            {
+                await ReplyAsync("Sorry, to get an image you have to pass in a space delimited listed of keywords.");
+            }
+
+            var request = (HttpWebRequest)WebRequest.Create($"https://source.unsplash.com/featured/?{string.Join(",", keywords!.Split(' '))}");
+            request.Method = "GET";
+            request.AllowAutoRedirect = true;
+            request.ContentType = "application/x-www-form-urlencoded";
+
+            var response = request.GetResponse();
+
+            await ReplyAsync(response.ResponseUri.ToString());
         }
     }
 }
