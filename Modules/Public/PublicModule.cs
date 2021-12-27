@@ -378,8 +378,8 @@ namespace Justibot.Modules.Public
             string message3 = (
                 $"- {Format.Bold("Heap Size:")} {GetHeapSize()} MB\n" +
                 $"- {Format.Bold("Guilds")}: {(Context.Client as DiscordSocketClient).Guilds.Count}\n" +
-                $"- {Format.Bold("Channels:")} {(Context.Client as DiscordSocketClient).Guilds.Sum(g => g.Channels.Count)}" +
-                $"- {Format.Bold("Users:")} {usercount}"
+                $"- {Format.Bold("Channels:")} {(Context.Client as DiscordSocketClient).Guilds.Sum(g => g.Channels.Count)}\n" +
+                $"- {Format.Bold("Users:")} {usercount}\n"
             );
             string message4 = (
                 $"- {Format.Bold("Uptime:")} {GetUptime()} \n" +

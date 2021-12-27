@@ -31,7 +31,7 @@ namespace Justibot
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(Services.Configuration.config.ConnectionString);
+            optionsBuilder.UseMySql(Services.Configuration.config.ConnectionString, ServerVersion.AutoDetect(Services.Configuration.config.ConnectionString));
         }
     }
 
