@@ -15,6 +15,7 @@ namespace justibot_server.Modules.Streaming
     public class StreamAlerts : ModuleBase
     {
 
+        [RequireUserPermission(ChannelPermission.ManageMessages)]
         [Command("Add")]
         [Summary("Add a user for alerting a guild on stream go live")]
         public async Task AddStreamAlert(IUser user, IChannel channel, [Remainder] string message)
@@ -25,6 +26,7 @@ namespace justibot_server.Modules.Streaming
             await ReplyAsync("Added!");
         }
 
+        [RequireUserPermission(ChannelPermission.ManageMessages)]
         [Command("Remove")]
         [Summary("stops allerting stream go live for a user in a guild")]
         public async Task RemoveStreamAlert(IUser user, IChannel channel, [Remainder] string message)

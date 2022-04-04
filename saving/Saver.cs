@@ -899,14 +899,14 @@ namespace Justibot
                     obj.userId = userId;
                     obj.message = message;
                     obj.channelId = channelId;
-                    db.Add(message);
+                    db.Add(obj);
                 }
                 else
                 {
                     var obj = messages.First();
                     obj.message = message;
                     obj.channelId = channelId;
-                    db.Update(message);
+                    db.Update(obj);
                 }
                 db.SaveChanges();
             }
