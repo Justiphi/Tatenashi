@@ -218,6 +218,7 @@ namespace Justibot
     }
     public class streamAlert
     {
+        public int streamAlertId { get; set; }
         public ulong userId {get; set;}
         public ulong guildId {get; set;}
         public ulong channelId {get; set;}
