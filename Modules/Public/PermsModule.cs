@@ -600,9 +600,8 @@ namespace Justibot.Modules.Public
                     }
                     else
                     {
-                        channelid = Context.Guild.DefaultChannelId;
+                        channelid = 123;
 
-                        ITextChannel channel2 = await Context.Guild.GetTextChannelAsync(channelid) as ITextChannel;
                         Justibot.Saver.SavePerm(activeuser, permission.ToUpper(), activator, channelid, mode2);
                         await ReplyAsync($"{Context.User.Mention} has disabled giveaways!");
                     }

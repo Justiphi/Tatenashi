@@ -29,7 +29,7 @@ namespace Justibot
             "Resources/Images/dogs/dog9.jpg"
         };
 
-        public static string version = "V10.0.4 Roley Poly";
+        public static string version = "V10.1.0 Streamer";
 
         public static string[] saveList =
         {

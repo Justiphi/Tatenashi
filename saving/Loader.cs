@@ -15,7 +15,7 @@ namespace Justibot
         {
             string mode = "nill";
             bool permAct = false;
-            ulong channel = user.Guild.DefaultChannelId;
+            ulong channel = 123;
 
             using (var context = new DataContext())
             {
@@ -28,7 +28,7 @@ namespace Justibot
                 if (perms.Count() == 0)
                 {
                     permAct = false;
-                    channel = user.Guild.DefaultChannelId;
+                    channel = 123;
                     mode = "nill";
                 }
                 else
@@ -46,7 +46,7 @@ namespace Justibot
         {
             string prizes = "nill";
             bool giveAct = false;
-            ulong channel = user.Guild.DefaultChannelId;
+            ulong channel = 123;
 
             using (var context = new DataContext())
             {
@@ -60,7 +60,7 @@ namespace Justibot
                 if (giveaway.Count() == 0)
                 {
                     giveAct = false;
-                    channel = user.Guild.DefaultChannelId;
+                    channel = 123;
                     prizes = "nill";
                 }
                 else
@@ -284,14 +284,14 @@ namespace Justibot
 
         public static KeyValuePair<DateTime, string> checkUpdate()
         {
-            using(var db = new DataContext())
+            using (var db = new DataContext())
             {
                 var versionCheker = db.versionChecks
                     .ToList();
-                
+
                 string version;
                 DateTime date;
-                if(versionCheker.Count() == 0)
+                if (versionCheker.Count() == 0)
                 {
                     date = DateTime.Now;
                     version = "nill";
@@ -301,8 +301,8 @@ namespace Justibot
                     date = versionCheker.First().time;
                     version = versionCheker.First().version;
                 }
-                
-                return(new KeyValuePair<DateTime, string>(date, version));
+
+                return (new KeyValuePair<DateTime, string>(date, version));
             }
         }
 
@@ -324,8 +324,8 @@ namespace Justibot
                     .Where(b => (b.User.Equals(user.Id) && b.Type.Equals(1)))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
-                
-                if(content.Count() == 0)
+
+                if (content.Count() == 0)
                 {
                     content.Add("No public notes found by this user.");
                 }
@@ -340,8 +340,8 @@ namespace Justibot
                     .Where(b => (b.User.Equals(user.Id) && b.Type.Equals(2)))
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
-                
-                if(content.Count() == 0)
+
+                if (content.Count() == 0)
                 {
                     content.Add("No public notes found by this user.");
                 }
@@ -358,7 +358,7 @@ namespace Justibot
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
 
-                if(content.Count() == 0)
+                if (content.Count() == 0)
                 {
                     content.Add("No staff notes found.");
                 }
@@ -374,7 +374,7 @@ namespace Justibot
                     .Select(x => $"({x.NoteID}) {Format.Bold($"{x.Name}:")} {x.Content}")
                     .ToList();
 
-                if(content.Count() == 0)
+                if (content.Count() == 0)
                 {
                     content.Add("No server notes found.");
                 }
@@ -392,11 +392,11 @@ namespace Justibot
 
                 int content2 = 0;
 
-                if(content.Count() == 0)
+                if (content.Count() == 0)
                 {
-                    content2 = 0 ;
+                    content2 = 0;
                 }
-                else if(content.First().joinable)
+                else if (content.First().joinable)
                 {
                     content2 = 2;
                 }
@@ -410,16 +410,16 @@ namespace Justibot
 
         public static ulong getRoleMessage(IGuildUser user)
         {
-            using(var context = new DataContext())
+            using (var context = new DataContext())
             {
                 var content = context.roleMessages.AsEnumerable()
                     .Where(x => x.guildId.Equals(user.GuildId))
                     .ToList();
 
-                if(content.Count() == 0)
+                if (content.Count() == 0)
                 {
-                    return(0);
-                } 
+                    return (0);
+                }
                 else
                 {
                     return content.First().MessageId;
@@ -429,16 +429,16 @@ namespace Justibot
 
         public static ulong getRole(IGuildUser user, string reaction)
         {
-            using(var context = new DataContext())
+            using (var context = new DataContext())
             {
                 var content = context.roleReactions.AsEnumerable()
                     .Where(x => x.guildId.Equals(user.GuildId) && x.reaction.ToString().Equals(reaction.ToString()))
                     .ToList();
 
-                if(content.Count() == 0)
+                if (content.Count() == 0)
                 {
-                    return(0);
-                } 
+                    return (0);
+                }
                 else
                 {
                     return content.Select(x => x.roleId).First();
@@ -448,18 +448,43 @@ namespace Justibot
 
         public static Dictionary<ulong, string> LoadReactionRoles(ulong guildId)
         {
-            using(var context = new DataContext())
+            using (var context = new DataContext())
             {
                 var returnDict = new Dictionary<ulong, string>();
 
                 var roles = context.roleReactions.AsEnumerable()
                     .Where(x => x.guildId.Equals(guildId)).ToList();
 
-                foreach(var role in roles)
+                foreach (var role in roles)
                 {
                     returnDict.Add(role.roleId, role.reaction);
                 }
                 return returnDict;
+            }
+        }
+
+        public static List<Tuple<ulong, ulong, string>> LoadStreamAlertMessage(ulong user)
+        {
+
+            using (var context = new DataContext())
+            {
+
+                List<Tuple<ulong, ulong, string>> returnVals = new List<Tuple<ulong, ulong, string>>();
+
+                var messages = context.streamAlerts.AsEnumerable()
+                    .Where(x => x.userId.Equals(user)).ToList();
+
+                if (messages.Count() == 0)
+                {
+                    return (null);
+                }
+
+                foreach (var message in messages)
+                {
+                    returnVals.Add(new Tuple<ulong, ulong, string>(message.guildId, message.channelId, message.message));
+                }
+
+                return (returnVals);
             }
         }
 

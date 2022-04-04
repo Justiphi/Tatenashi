@@ -6,6 +6,8 @@ using Discord.Commands;
 using Justibot.Modules.Public;
 using Justibot.Services;
 using Discord.Rest;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Justibot
 {
@@ -28,8 +30,7 @@ namespace Justibot
             //create client and add what serverity of information to log
             client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                LogLevel = LogSeverity.Info,
-                ExclusiveBulkDelete = false,
+                LogLevel = LogSeverity.Info
             });
 
             //create template for logged messages
@@ -168,16 +169,15 @@ namespace Justibot
             };
 
             //when user leaves guild check appropriate permissions and act accordingly
-            client.UserLeft += async (user) =>
+            client.UserLeft += async (guild, user) =>
             {
                 //check leaving permission
-                var results = Justibot.Loader.LoadPerm(user, "LEAVING");
+                var results = Justibot.Loader.LoadPerm(user as IGuildUser, "LEAVING");
                 if (results.Item1 == true)
                 {
                     ulong result2 = results.Item2;
-                    var guild = user.Guild as IGuild;
                     //get channel to send leaving message to
-                    SocketTextChannel leaveChannel = user.Guild.GetChannel(result2) as SocketTextChannel;
+                    SocketTextChannel leaveChannel = guild.GetChannel(result2) as SocketTextChannel;
 
                     //if leaving message available set it, else use default message
                     bool check = welcomedict.leaves.TryGetValue(guild.Id, out string leave);
@@ -222,17 +222,16 @@ namespace Justibot
                 }
 
                 //if log module is enabled, send message to log channel bassed on argument (plain text or embed)
-                var results2 = Justibot.Loader.LoadPerm(user, "LOG");
+                var results2 = Justibot.Loader.LoadPerm(user as IGuildUser, "LOG");
                 if (results2.Item1 == true)
                 {
                     ulong result2 = results2.Item2;
-                    var guild = user.Guild as IGuild;
-                    SocketTextChannel welcomeChannel = user.Guild.GetChannel(result2) as SocketTextChannel;
+                    SocketTextChannel welcomeChannel = guild.GetChannel(result2) as SocketTextChannel;
 
                     if (results2.Item3 == "PLAIN")
                     {
                         await welcomeChannel.SendMessageAsync($"{Format.Bold($"{user.Username}")}#{user.Discriminator}, ID:<{user.Id}> has left the server. \n" +
-                            $"There are now {user.Guild.MemberCount} members.");
+                            $"There are now {guild.MemberCount} members.");
                     }
                     else
                     {
@@ -253,7 +252,7 @@ namespace Justibot
                         .WithColor(color)
                         .WithTitle($"{Format.Bold($"{client.CurrentUser.Username}:")}")
                         .WithDescription($"{Format.Bold($"{user.Username}")}#{user.Discriminator}, ID:<{user.Id}> has left the server. \n" +
-                            $"There are now {user.Guild.MemberCount} members.")
+                            $"There are now {guild.MemberCount} members.")
                         .WithThumbnailUrl(avatar)
                         .Build();
 
@@ -309,10 +308,10 @@ namespace Justibot
                         }
                     }
                 }
-                
+
             };
-            
-            client.ReactionAdded += async (Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel originChannel, SocketReaction reaction) =>
+
+            client.ReactionAdded += async (Cacheable<IUserMessage, ulong> cachedMessage, Cacheable<IMessageChannel, ulong> originChannel, SocketReaction reaction) =>
             {
                 var user = (reaction.User.Value as IGuildUser);
                 if (Loader.getRoleMessage(user) == reaction.MessageId)
@@ -331,7 +330,7 @@ namespace Justibot
                 }
             };
 
-            client.ReactionRemoved += async (Cacheable<IUserMessage, ulong> cachedMessage, ISocketMessageChannel originChannel, SocketReaction reaction) =>
+            client.ReactionRemoved += async (Cacheable<IUserMessage, ulong> cachedMessage, Cacheable<IMessageChannel, ulong> originChannel, SocketReaction reaction) =>
             {
                 var user = (reaction.User.Value as IGuildUser);
                 if (!user.IsBot)
@@ -348,6 +347,34 @@ namespace Justibot
                 }
             };
 
+            client.PresenceUpdated += async (user, oldPresence, newPresence) =>
+            {
+                var application = await client.GetApplicationInfoAsync();
+
+                IReadOnlyCollection<IActivity> oldActivities = oldPresence.Activities;
+
+                if (oldActivities.Where(x => x.Type == ActivityType.Streaming).Count() == 0)
+                {
+                    IReadOnlyCollection<IActivity> newActivities = newPresence.Activities;
+                    if (newActivities.Where(x => x.Type == ActivityType.Streaming).Count() > 0)
+                    {
+                        var list = Loader.LoadStreamAlertMessage(user.Id); //tuple format (guild, channel, massage)
+                        foreach (var item in list)
+                        {
+                            SocketGuild guild = client.GetGuild(item.Item1);
+                            if (guild != null)
+                            {
+                                SocketTextChannel channel = guild.GetChannel(item.Item2) as SocketTextChannel;
+                                if (channel != null)
+                                {
+                                    await channel.SendMessageAsync(item.Item3);
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
             //initialize commands and commandhandler
             handler = new CommandHandler();
             await handler.InitCommands(client);
@@ -359,7 +386,7 @@ namespace Justibot
         {
             Console.WriteLine(msg.ToString());
             //if log message contains failed message restart bot
-            if(msg.ToString().Contains("Failed to resume previous session"))
+            if (msg.ToString().Contains("Failed to resume previous session"))
             {
                 restartBot();
             }

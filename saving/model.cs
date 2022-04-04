@@ -27,6 +27,7 @@ namespace Justibot
         public DbSet<blacklist> blacklists { get; set; }
         public DbSet<roleMessage> roleMessages { get; set; }
         public DbSet<roleReaction> roleReactions { get; set; }
+        public DbSet<streamAlert> streamAlerts { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -214,5 +215,12 @@ namespace Justibot
         public string reaction {get; set;}
         public ulong roleId {get; set;}
         public ulong guildId {get; set;}
+    }
+    public class streamAlert
+    {
+        public ulong userId {get; set;}
+        public ulong guildId {get; set;}
+        public ulong channelId {get; set;}
+        public string message {get; set;}
     }
 }

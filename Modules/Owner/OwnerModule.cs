@@ -25,7 +25,7 @@ namespace Justibot.Modules.OwnerModule
                 if (RequestedGuild != null)
                 {
                     IInviteMetadata GuildDefault =
-                        await (await RequestedGuild.GetChannelAsync(RequestedGuild.DefaultChannelId) as ITextChannel)
+                        await (await RequestedGuild.GetDefaultChannelAsync() as ITextChannel)
                             .CreateInviteAsync();
                     await Context.Channel.SendMessageAsync("Invite link: " + GuildDefault.Url);
                 }
